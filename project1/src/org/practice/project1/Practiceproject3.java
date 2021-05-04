@@ -14,7 +14,10 @@ public class Practiceproject3 {
 			System.out.print("¿‘∑¬ : ");
 			me = sc.next();
 			System.out.println("me : " + me);
-
+			if (me == "¡÷∏‘") { System.out.println("¡÷∏‘"); }
+			else if (me == "∞°¿ß") System.out.println("∞°¿ß");
+			else if (me == "∫∏") System.out.println("∫∏");
+			
 			int n = rand.nextInt(3);
 			if (n == 0)
 				com = "¡÷∏‘";
@@ -23,11 +26,13 @@ public class Practiceproject3 {
 			else
 				com = "∫∏";
 			System.out.println("com : " + com);
+			
+			
 			if ((me == "¡÷∏‘" && com == "∞°¿ß") || (me == "∞°¿ß" && com == "∫∏") || (me == "∫∏" && com == "¡÷∏‘")) {
 				System.out.println("me win");
 			} else if ((com == "¡÷∏‘" && me == "∞°¿ß") || (com == "∞°¿ß" && me == "∫∏") || (com == "∫∏" && me == "¡÷∏‘")) {
 				System.out.println("com win");
-			} else if ((com == "¡÷∏‘" && me == "¡÷∏‘") || (com == "∞°¿ß" && me == "∞°¿ß") || (com == "∫∏" && me == "∫∏")){
+			} else if (com ==  me){
 				System.out.println("me = com");
 			}
 		}
