@@ -11,26 +11,26 @@ public class Practiceproject3 {
 		Scanner sc = new Scanner(System.in);
 		Random rand = new Random();
 		for (int i = 0; i < 3; i++) {
-			System.out.print("ÀÔ·Â : ");
+			System.out.print("ìž…ë ¥ : ");
 			me = sc.next();
 			System.out.println("me : " + me);
-			if (me == "ÁÖ¸Ô") { System.out.println("ÁÖ¸Ô"); }
-			else if (me == "°¡À§") System.out.println("°¡À§");
-			else if (me == "º¸") System.out.println("º¸");
+			if (me == "ì£¼ë¨¹") { System.out.println("ì£¼ë¨¹"); }
+			else if (me == "ê°€ìœ„") { System.out.println("ê°€ìœ„"); }
+			else if (me == "ë³´") { System.out.println("ë³´"); }
 			
 			int n = rand.nextInt(3);
 			if (n == 0)
-				com = "ÁÖ¸Ô";
+				com = "ì£¼ë¨¹";
 			else if (n == 1)
-				com = "°¡À§";
+				com = "ê°€ìœ„";
 			else
-				com = "º¸";
+				com = "ë³´";
 			System.out.println("com : " + com);
 			
 			
-			if ((me == "ÁÖ¸Ô" && com == "°¡À§") || (me == "°¡À§" && com == "º¸") || (me == "º¸" && com == "ÁÖ¸Ô")) {
+			if ((me == "ì£¼ë¨¹" && com == "ê°€ìœ„") || (me == "ê°€ìœ„" && com == "ë³´") || (me == "ë³´" && com == "ì£¼ë¨¹")) {
 				System.out.println("me win");
-			} else if ((com == "ÁÖ¸Ô" && me == "°¡À§") || (com == "°¡À§" && me == "º¸") || (com == "º¸" && me == "ÁÖ¸Ô")) {
+			} else if ((com == "ì£¼ë¨¹" && me == "ê°€ìœ„") || (com == "ê°€ìœ„" && me == "ë³´") || (com == "ë³´" && me == "ì£¼ë¨¹")) {
 				System.out.println("com win");
 			} else if (com ==  me){
 				System.out.println("me = com");
