@@ -15,7 +15,6 @@ public class Practiceproject3 {
 		for (int i = 0; i < 3; i++) {
 			System.out.print("me ют╥б : ");
 			me = sc.next();
-			
 			int n = rand.nextInt(3);
 			if (n == 0)
 				com = "аж╦т";
