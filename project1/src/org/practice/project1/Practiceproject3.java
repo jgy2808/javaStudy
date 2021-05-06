@@ -6,17 +6,15 @@ import java.util.Random;
 public class Practiceproject3 {
 
 	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		
 		String me;
 		String com;
-		Scanner sc = new Scanner(System.in);
+		
 		Random rand = new Random();
 		for (int i = 0; i < 3; i++) {
-			System.out.print("입력 : ");
+			System.out.print("me 입력 : ");
 			me = sc.next();
-			System.out.println("me : " + me);
-			if (me == "주먹") { System.out.println("주먹"); }
-			else if (me == "가위") System.out.println("가위");
-			else if (me == "보") System.out.println("보");
 			
 			int n = rand.nextInt(3);
 			if (n == 0)
@@ -28,11 +26,11 @@ public class Practiceproject3 {
 			System.out.println("com : " + com);
 			
 			
-			if ((me == "주먹" && com == "가위") || (me == "가위" && com == "보") || (me == "보" && com == "주먹")) {
+			if ((me.compareTo("주먹") == com.compareTo("가위")) || (me.compareTo("가위") == com.compareTo("보")) || (me.compareTo("보") == com.compareTo("주먹"))) {
 				System.out.println("me win");
-			} else if ((com == "주먹" && me == "가위") || (com == "가위" && me == "보") || (com == "보" && me == "주먹")) {
+			} else if ((com.compareTo("주먹") == me.compareTo("가위")) || (com.compareTo("가위") == me.compareTo("보")) || (com.compareTo("보") == me.compareTo("주먹"))) {
 				System.out.println("com win");
-			} else if (com ==  me){
+			} else if (me.compareTo(com) == 0){
 				System.out.println("me = com");
 			}
 		}
