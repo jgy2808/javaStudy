@@ -14,7 +14,23 @@ public class ArrayUtilityClass2 {
 		}
 		static int[] remove(int[] s1, int[] s2) {
 			int cnt = 0;
-			for(int i = 0; i < s1.length; i++) {
+			int i = 0, j = 0;
+			int[] arr = s1;
+			int[] temp;
+			while(i < s1.length) {
+				while(j < s2.length)
+				if (s1[i] == s2[j]) {
+					temp = new int[s1.length - 1];
+					for (int k = 0; k < temp.length - 1; k++) {
+						temp[k] = s1[k + 1];
+					}
+					s1 = new int[temp.length];
+					s1 = temp;
+				}
+			}
+			
+			
+			/*for(int i = 0; i < s1.length; i++) {
 				for (int j : s2) {
 					if (s1[i] == j) {
 						s1[i] = 0;
@@ -37,7 +53,7 @@ public class ArrayUtilityClass2 {
 						break;
 					}
 				}
-			}
+			}*/
 			return arr;
 		}
 	}
@@ -54,7 +70,18 @@ public class ArrayUtilityClass2 {
 		System.out.print("remove : ");
 		for (int i = 0; i < re.length; i++) {
 			System.out.print(re[i] + " ");
+		}System.out.println();
+		int[] s3 = new int[5];
+		System.out.println(s3.length);
+		s3[0] = 1;
+		s3[1] = 2;
+		s3[2] = 3;
+		
+		System.out.println(s3.length);
+		for(int i : s3) {
+			System.out.println(i);
 		}
+		
 	}
 
 }
