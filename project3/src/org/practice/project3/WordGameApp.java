@@ -9,7 +9,7 @@ public class WordGameApp {
 		private String word;
 		private String[] temp;
 		static String[] wordList = new String[0];
-		
+
 		public void setName(String name) {
 			this.name = name;
 		}
@@ -34,7 +34,8 @@ public class WordGameApp {
 			return false;
 		}
 		public boolean Succeed(String lastword) {
-			if (lastword.compareTo(word) == 0 || lastword.charAt(lastword.length() - 1) != word.charAt(0) || IsRepeatedSameChar(word) || ExistSameStr(word)) {
+			if (lastword.compareTo(word) == 0 || lastword.charAt(lastword.length() - 1) != word.charAt(0) 
+					|| IsRepeatedSameChar(word) || ExistSameStr(word)) {
 				System.out.println(name + "이(가) 졌습니다.");
 				return false;
 			}
@@ -48,7 +49,6 @@ public class WordGameApp {
 				return true;
 			}
 		}
-		
 	}
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -72,6 +72,11 @@ public class WordGameApp {
 			word = p[i].getWord();
 			i = (i+1)%num;
 		}
+		System.out.print("나온 단어들 : ");
+		System.out.print("{");
+		for (i = 0; i < p[0].wordList.length; i++) {
+			System.out.print(p[0].wordList[i]);
+			if (i < p[0].wordList.length - 1) System.out.print(", ");
+		}System.out.println("}");
 	}
-
 }
