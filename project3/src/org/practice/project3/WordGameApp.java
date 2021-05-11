@@ -35,7 +35,7 @@ public class WordGameApp {
 		}
 		public boolean Succeed(String lastword) {
 			if (lastword.compareTo(word) == 0 || lastword.charAt(lastword.length() - 1) != word.charAt(0) || IsRepeatedSameChar(word) || ExistSameStr(word)) {
-				System.out.println(name + "이 졌습니다.");
+				System.out.println(name + "이(가) 졌습니다.");
 				return false;
 			}
 			else {
