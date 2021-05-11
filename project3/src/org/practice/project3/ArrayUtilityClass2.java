@@ -12,6 +12,7 @@ public class ArrayUtilityClass2 {
 		}
 		static int[] remove(int[] s1, int[] s2) {
 			int arr[];
+			arr[0] = 1;
 			return arr;
 		}
 	}
