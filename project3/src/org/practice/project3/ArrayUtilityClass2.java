@@ -9,11 +9,9 @@ public class ArrayUtilityClass2 {
 				arr[i] = s2[i - s1.length];
 			}
 			return arr;
-			
 		}
 		static int[] remove(int[] s1, int[] s2) {
 			int arr[];
-			arr[0] = 1;
 			return arr;
 		}
 	}
