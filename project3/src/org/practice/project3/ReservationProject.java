@@ -9,7 +9,7 @@ public class ReservationProject {
 		private char seat;
 		private int number;
 
-		public void Reserve() {
+		public void setSubscriber() {
 			int n;
 			while (true) {
 				System.out.print("ÁÂ¼®±¸ºÐ S<1>, A<2>, B<3> >>");
