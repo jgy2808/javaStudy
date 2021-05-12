@@ -6,36 +6,41 @@ public class ReservationProject {
 	public static class Subscriber {
 		Scanner sc = new Scanner(System.in);
 		private String name;
-		private String seat;
-		private int num;
+		private char seat;
+		private int number;
 
 		public void Reserve() {
-			System.out.print("좌석구분 S<1>, A<2>, B<3> >>");
-			num = sc.nextInt();
-			if (num == 1) {
-				System.out.print("S>>");
-				for(int i = 0; i < 10; i++) {
-					if 
+			int n;
+			while (true) {
+				System.out.print("좌석구분 S<1>, A<2>, B<3> >>");
+				n = sc.nextInt();
+				if (n == 1) {
+					seat = 'S'; break;
+				} else if (n == 2) {
+					seat = 'A'; break;
+				} else if (n == 3) {
+					seat = 'B'; break;
+				} else {
+					System.out.println("다시 입력해주세요");
 				}
 			}
-			else if (num == 2) {
-
-			}
-			else if (num == 3) {
-
-			}
-			System.out.print();
 			System.out.print("이름>>");
 			name = sc.next();
-			System.out.print("");
+			System.out.print("번호>>");
+			number = sc.nextInt();
 		}
 
-		public void ViewAllSeat() {
-
+		public String getName() {
+			return name;
 		}
 
 		public void CancelReserve() {
-
+			String name;
+			System.out.print("이름>>");
+			name = sc.next();
+			if (this.name == name) {
+				this = new Subscriber();
+			}
 		}
 
 	}
