@@ -7,12 +7,12 @@ public class ReservationProject {
 	public static final int NUM_SEAT = 10;
 
 	public static class Subscriber {
-		Scanner sc = new Scanner(System.in);
 		private String name;
 		private char seat;
 		private int number;
 
 		public void setSubscriber(int seattype) {
+			Scanner sc = new Scanner(System.in);
 			if (seattype == 1) {
 				seat = 'S';
 			} else if (seattype == 2) {
@@ -22,8 +22,18 @@ public class ReservationProject {
 			}
 			System.out.print("이름>>");
 			name = sc.next();
-			System.out.print("번호>>");
-			number = sc.nextInt();
+			while (true) {
+				try {
+					System.out.print("번호>>");
+					number = sc.nextInt();
+					if (number >= 0 && number <= NUM_SEAT) {
+						break;
+					}
+				} catch (Exception e) {
+					sc = new Scanner(System.in);
+					System.out.println("다시 입력해주세요.");
+				}
+			}
 		}
 
 		public String getName() {
@@ -53,12 +63,14 @@ public class ReservationProject {
 		}
 
 		public void AddSubscriber(Subscriber s) {
-			if (s.getSeat() == 'S') {
-				list[0][s.getNumber() - 1] = s;
-			} else if (s.getSeat() == 'A') {
-				list[1][s.getNumber() - 1] = s;
-			} else if (s.getSeat() == 'B') {
-				list[2][s.getNumber() - 1] = s;
+			for (int i = 0; i < NUM_SEAT_TYPE; i++) {
+				if (s.getSeat() == list[i][s.getNumber() - 1].getSeat()) {
+					if (s == list[i][s.getNumber() - 1]) {
+						System.out.println("이미 있는 좌석입니다.");
+						return;
+					}
+					list[i][s.getNumber() - 1] = s;
+				}
 			}
 		}
 
@@ -119,11 +131,17 @@ public class ReservationProject {
 		Scanner sc = new Scanner(System.in);
 		int seat;
 		while (true) {
-			System.out.print("좌석구분 S<1>, A<2>, B<3> >>");
-			seat = sc.nextInt();
-			if (seat >= 1 && seat <= 3)
-				break;
-			System.out.println("다시 입력해주세요.");
+			try {
+				System.out.print("좌석구분 S<1>, A<2>, B<3> >>");
+				seat = sc.nextInt();
+				if (seat >= 1 && seat <= 3) {
+					break;
+				}
+				System.out.println("다시 입력해주세요.");
+			} catch (Exception e) {
+				sc = new Scanner(System.in);
+				System.out.println("다시 입력해주세요.");	
+			}
 		}
 		return seat;
 	}
@@ -133,7 +151,7 @@ public class ReservationProject {
 		Subscriber[] s = new Subscriber[9];
 		SubscriberList subList = new SubscriberList();
 		int sCount = 0;
-		int num = 0, k;
+		int num = 0, k, finCount = 0;
 		while (true) {
 			try {
 				System.out.print("예약<1>, 조회<2>, 취소<3>, 끝내기<4> >>");
@@ -157,9 +175,9 @@ public class ReservationProject {
 					return;
 				}
 			} catch (Exception e) {
+				sc = new Scanner(System.in);
 				System.out.println("다시 입력해주세요.");
 			}
-
 		}
 	}
 }
