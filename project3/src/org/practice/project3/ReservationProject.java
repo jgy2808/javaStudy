@@ -13,7 +13,10 @@ public class ReservationProject {
 			System.out.print("ÁÂ¼®±¸ºÐ S<1>, A<2>, B<3> >>");
 			num = sc.nextInt();
 			if (num == 1) {
-
+				System.out.print("S>>");
+				for(int i = 0; i < 10; i++) {
+					if 
+				}
 			}
 			else if (num == 2) {
 
