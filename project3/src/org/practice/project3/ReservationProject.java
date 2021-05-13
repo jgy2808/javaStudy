@@ -17,19 +17,31 @@ public class ReservationProject {
 //		}
 //	};
 
+	public static int ChoiceSeat() {
+		int seat;
+		while (true) {
+			try {
+				System.out.print("좌석구분 S<1>, A<2>, B<3> >>");
+				seat = sc.nextInt();
+				if (seat >= 1 && seat <= 3) {
+					break;
+				}
+				System.out.println("다시 입력해주세요.");
+			} catch (Exception e) {
+				sc = new Scanner(System.in);
+				System.out.println("다시 입력해주세요.");	
+			}
+		}
+		return seat;
+	}
+	
 	public static class Subscriber {
 		private String name;
-		private char seat;
+		private int seat;
 		private int number;
 
-		public void setSubscriber(int seattype) {
-			if (seattype == 1) {
-				seat = 'S';
-			} else if (seattype == 2) {
-				seat = 'A';
-			} else if (seattype == 3) {
-				seat = 'B';
-			}
+		public void setSubscriber() {
+			seat = ChoiceSeat();
 			System.out.print("이름>>");
 			name = sc.next();
 			while (true) {
@@ -51,7 +63,7 @@ public class ReservationProject {
 			return name;
 		}
 
-		public char getSeat() {
+		public int getSeat() {
 			return seat;
 		}
 
@@ -73,30 +85,14 @@ public class ReservationProject {
 			}
 		}
 
-		public void AddSubscriber(int k) {
+		public void AddSubscriber() {
 			s = new Subscriber();
-			s.setSubscriber(k);
-			if (s.getSeat() == 'S') {
-				if (s.getNumber() == list[0][s.getNumber() - 1].getNumber()) {
-					System.out.println("이미 있는 좌석입니다.");
-					return;
-				}
-				list[0][s.getNumber() - 1] = s;
+			s.setSubscriber();
+			if (s.getNumber() == list[s.getSeat() - 1][s.getNumber() - 1].getNumber()) {
+				System.out.println("이미 있는 좌석입니다.");
+				return;
 			}
-			else if (s.getSeat() == 'A') {
-				if (s.getNumber() == list[1][s.getNumber() - 1].getNumber()) {
-					System.out.println("이미 있는 좌석입니다.");
-					return;
-				}
-				list[1][s.getNumber() - 1] = s;
-			}
-			else if (s.getSeat() == 'B') {
-				if (s.getNumber() == list[2][s.getNumber() - 1].getNumber()) {
-					System.out.println("이미 있는 좌석입니다.");
-					return;
-				}
-				list[2][s.getNumber() - 1] = s;
-			}
+			list[s.getSeat() - 1][s.getNumber() - 1] = s;
 		}
 
 		public void Viewseat(int seattype) {
@@ -114,8 +110,7 @@ public class ReservationProject {
 					System.out.print("_");
 				else
 					System.out.print(list[seattype - 1][i].getName());
-				if (i < NUM_SEAT - 1)
-					System.out.print(" ");
+				if (i < NUM_SEAT - 1) System.out.print(" ");
 			}
 			System.out.println();
 		}
@@ -154,24 +149,6 @@ public class ReservationProject {
 		}
 	}
 
-	public static int ChoiceSeat() {
-		int seat;
-		while (true) {
-			try {
-				System.out.print("좌석구분 S<1>, A<2>, B<3> >>");
-				seat = sc.nextInt();
-				if (seat >= 1 && seat <= 3) {
-					break;
-				}
-				System.out.println("다시 입력해주세요.");
-			} catch (Exception e) {
-				sc = new Scanner(System.in);
-				System.out.println("다시 입력해주세요.");	
-			}
-		}
-		return seat;
-	}
-
 	public static void main(String[] args) {
 		SubscriberList subList = new SubscriberList();
 		int sCount = 0;
@@ -183,8 +160,7 @@ public class ReservationProject {
 				switch (num) {
 				case 1:
 					subList.ViewAllSeat();
-					k = ChoiceSeat();
-					subList.AddSubscriber(k);
+					subList.AddSubscriber();
 					sCount++;
 					break;
 				case 2:
