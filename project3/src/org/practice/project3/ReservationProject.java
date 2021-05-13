@@ -63,14 +63,26 @@ public class ReservationProject {
 		}
 
 		public void AddSubscriber(Subscriber s) {
-			for (int i = 0; i < NUM_SEAT_TYPE; i++) {
-				if (s.getSeat() == list[i][s.getNumber() - 1].getSeat()) {
-					if (s == list[i][s.getNumber() - 1]) {
-						System.out.println("이미 있는 좌석입니다.");
-						return;
-					}
-					list[i][s.getNumber() - 1] = s;
+			if (s.getSeat() == 'S') {
+				if (s.getNumber() == list[0][s.getNumber() - 1].getNumber()) {
+					System.out.println("이미 있는 좌석입니다.");
+					return;
 				}
+				list[0][s.getNumber() - 1] = s;
+			}
+			else if (s.getSeat() == 'A') {
+				if (s.getNumber() == list[1][s.getNumber() - 1].getNumber()) {
+					System.out.println("이미 있는 좌석입니다.");
+					return;
+				}
+				list[1][s.getNumber() - 1] = s;
+			}
+			else if (s.getSeat() == 'B') {
+				if (s.getNumber() == list[2][s.getNumber() - 1].getNumber()) {
+					System.out.println("이미 있는 좌석입니다.");
+					return;
+				}
+				list[2][s.getNumber() - 1] = s;
 			}
 		}
 
@@ -151,7 +163,7 @@ public class ReservationProject {
 		Subscriber[] s = new Subscriber[9];
 		SubscriberList subList = new SubscriberList();
 		int sCount = 0;
-		int num = 0, k, finCount = 0;
+		int num = 0, k;
 		while (true) {
 			try {
 				System.out.print("예약<1>, 조회<2>, 취소<3>, 끝내기<4> >>");
