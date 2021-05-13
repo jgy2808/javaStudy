@@ -7,6 +7,16 @@ public class ReservationProject {
 	public static final int NUM_SEAT = 10;
 	static Scanner sc = new Scanner(System.in);
 
+//	public enum SEAT_TYPE {
+//		S(1),
+//		A(2),
+//		B(3);
+//		private int value;
+//		SEAT_TYPE(int value) {
+//			this.value = value;
+//		}
+//	};
+
 	public static class Subscriber {
 		private String name;
 		private char seat;
@@ -29,6 +39,7 @@ public class ReservationProject {
 					if (number >= 0 && number <= NUM_SEAT) {
 						break;
 					}
+					System.out.println("다시 입력해주세요.");
 				} catch (Exception e) {
 					sc = new Scanner(System.in);
 					System.out.println("다시 입력해주세요.");
@@ -50,6 +61,7 @@ public class ReservationProject {
 	}
 
 	public static class SubscriberList {
+		Subscriber s;
 		private Subscriber[][] list = new Subscriber[NUM_SEAT_TYPE][];
 
 		public SubscriberList() {
@@ -61,7 +73,9 @@ public class ReservationProject {
 			}
 		}
 
-		public void AddSubscriber(Subscriber s) {
+		public void AddSubscriber(int k) {
+			s = new Subscriber();
+			s.setSubscriber(k);
 			if (s.getSeat() == 'S') {
 				if (s.getNumber() == list[0][s.getNumber() - 1].getNumber()) {
 					System.out.println("이미 있는 좌석입니다.");
@@ -110,7 +124,6 @@ public class ReservationProject {
 			for (int i = 1; i <= NUM_SEAT_TYPE; i++) {
 				Viewseat(i);
 			}
-			System.out.println("<<<조회를 완료하였습니다.>>>");
 		}
 
 		public boolean IsAllNull(int seattype) {
@@ -160,7 +173,6 @@ public class ReservationProject {
 	}
 
 	public static void main(String[] args) {
-		Subscriber s;
 		SubscriberList subList = new SubscriberList();
 		int sCount = 0;
 		int num = 0, k;
@@ -170,14 +182,14 @@ public class ReservationProject {
 				num = sc.nextInt();
 				switch (num) {
 				case 1:
+					subList.ViewAllSeat();
 					k = ChoiceSeat();
-					s = new Subscriber();
-					s.setSubscriber(k);
-					subList.AddSubscriber(s);
+					subList.AddSubscriber(k);
 					sCount++;
 					break;
 				case 2:
 					subList.ViewAllSeat();
+					System.out.println("<<<조회를 완료하였습니다.>>>");
 					break;
 				case 3:
 					k = ChoiceSeat();
