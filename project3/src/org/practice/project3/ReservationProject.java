@@ -129,6 +129,7 @@ public class ReservationProject {
 				System.out.println("해당 좌석 타입의 좌석이 모두 비어있습니다.");
 				return;
 			}
+			// -- 이름 말고 번호 입력해서 예약 취소하기 -> 동명이인 있을 수 있음 --
 			System.out.print("이름>>");
 			name = sc.next();
 			for (int i = 0; i < NUM_SEAT; i++) {
@@ -160,7 +161,7 @@ public class ReservationProject {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		Subscriber[] s = new Subscriber[9];
+		Subscriber s;
 		SubscriberList subList = new SubscriberList();
 		int sCount = 0;
 		int num = 0, k;
@@ -171,9 +172,9 @@ public class ReservationProject {
 				switch (num) {
 				case 1:
 					k = ChoiceSeat();
-					s[sCount] = new Subscriber();
-					s[sCount].setSubscriber(k);
-					subList.AddSubscriber(s[sCount]);
+					s = new Subscriber();
+					s.setSubscriber(k);
+					subList.AddSubscriber(s);
 					sCount++;
 					break;
 				case 2:
