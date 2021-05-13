@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class ReservationProject {
 	public static final int NUM_SEAT_TYPE = 3;
 	public static final int NUM_SEAT = 10;
+	static Scanner sc = new Scanner(System.in);
 
 	public static class Subscriber {
 		private String name;
@@ -12,7 +13,6 @@ public class ReservationProject {
 		private int number;
 
 		public void setSubscriber(int seattype) {
-			Scanner sc = new Scanner(System.in);
 			if (seattype == 1) {
 				seat = 'S';
 			} else if (seattype == 2) {
@@ -50,7 +50,6 @@ public class ReservationProject {
 	}
 
 	public static class SubscriberList {
-		Scanner sc = new Scanner(System.in);
 		private Subscriber[][] list = new Subscriber[NUM_SEAT_TYPE][];
 
 		public SubscriberList() {
@@ -98,7 +97,7 @@ public class ReservationProject {
 			for (int i = 0; i < NUM_SEAT; i++) {
 				System.out.print((i + 1) + ". ");
 				if (list[seattype - 1][i].getName() == null)
-					System.out.print("□");
+					System.out.print("_");
 				else
 					System.out.print(list[seattype - 1][i].getName());
 				if (i < NUM_SEAT - 1)
@@ -116,32 +115,33 @@ public class ReservationProject {
 
 		public boolean IsAllNull(int seattype) {
 			for (int i = 0; i < NUM_SEAT; i++) {
-				if (list[seattype][i] != null)
+				if (list[seattype][i].getName() != null)
 					return false;
 			}
 			return true;
 		}
 
 		public void CancelReserve(int seattype) {
-			String name;
+			int num;
 			Viewseat(seattype);
 			if (IsAllNull(seattype - 1)) {
 				System.out.println("해당 좌석 타입의 좌석이 모두 비어있습니다.");
 				return;
 			}
 			// -- 이름 말고 번호 입력해서 예약 취소하기 -> 동명이인 있을 수 있음 --
-			System.out.print("이름>>");
-			name = sc.next();
-			for (int i = 0; i < NUM_SEAT; i++) {
-				if (list[seattype - 1][i] != null && list[seattype - 1][i].getName().compareTo(name) == 0) {
-					list[seattype - 1][i] = null;
-				}
+			System.out.print("번호>>");
+			num = sc.nextInt();
+			if (list[seattype - 1][num - 1].getName() == null) {
+				System.out.println("해당 좌석은 비어있습니다.");
+			}
+			else {
+				list[seattype - 1][num - 1] = new Subscriber();
+				System.out.println("좌석 예약이 취소되었습니다.");
 			}
 		}
 	}
 
 	public static int ChoiceSeat() {
-		Scanner sc = new Scanner(System.in);
 		int seat;
 		while (true) {
 			try {
@@ -160,7 +160,6 @@ public class ReservationProject {
 	}
 
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
 		Subscriber s;
 		SubscriberList subList = new SubscriberList();
 		int sCount = 0;
