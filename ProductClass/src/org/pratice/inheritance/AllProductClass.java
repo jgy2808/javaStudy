@@ -14,10 +14,10 @@ public class AllProductClass {
 		
 		public void Addproduct() {
 			System.out.print("상품 설명>>");
-			productInfo = sc.next();
-			sc = new Scanner(System.in);
+			sc.nextLine();
+			productInfo = sc.nextLine();
 			System.out.print("생산자>>");
-			producer = sc.next();
+			producer = sc.nextLine();
 			System.out.print("가격>>");
 			productPrice = sc.nextInt();
 		}
@@ -35,7 +35,8 @@ public class AllProductClass {
 		public void Addproduct() {
 			super.Addproduct();
 			System.out.print("앨범 제목>>");
-			albumTitle = sc.next();
+			sc.nextLine();
+			albumTitle = sc.nextLine();
 			System.out.print("가수>>");
 			singer = sc.next();
 		}
@@ -56,9 +57,10 @@ public class AllProductClass {
 			System.out.print("ISBN>>");
 			numberISBN = sc.next();
 			System.out.print("저자>>");
-			author = sc.next();
+			sc.nextLine();
+			author = sc.nextLine();
 			System.out.print("책 제목>>");
-			bookTitle = sc.next();
+			bookTitle = sc.nextLine();
 		}
 		
 		public void ShowProductInfo() {
