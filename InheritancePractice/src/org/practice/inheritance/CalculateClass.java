@@ -1,5 +1,7 @@
 package org.practice.inheritance;
 
+import java.util.Scanner;
+
 public class CalculateClass {
 
 	public static abstract class Calc {
@@ -60,9 +62,36 @@ public class CalculateClass {
 	}
 
 	public static void main(String[] args) {
-		Calc a = new Mul();
-		a.setValue(5, 3);
-		System.out.println(a.calculate());
+		Scanner sc = new Scanner(System.in);
+		int a, b;
+		char op;
+		System.out.print("두 정수와 연산자 입력>>");
+		a = sc.nextInt();
+		b = sc.nextInt();
+		op = sc.next().charAt(0);
+		Calc c;
+		switch(op) {
+		case '+' :
+			c = new Add();
+			c.setValue(a, b);
+			System.out.println(c.calculate());
+			break;
+		case '-' :
+			c = new Sub();
+			c.setValue(a, b);
+			System.out.println(c.calculate());
+			break;
+		case '*' :
+			c = new Mul();
+			c.setValue(a, b);
+			System.out.println(c.calculate());
+			break;
+		case '/' :
+			c = new Div();
+			c.setValue(a, b);
+			System.out.println(c.calculate());
+			break;
+		}
 	}
 
 }
