@@ -4,27 +4,30 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class AlphabetHistogram {
-	
+
 	public static void main(String[] args) {
 		InputStreamReader rd = new InputStreamReader(System.in);
-        try
-        {
-            while(true)    //ctrl + z키가 입력될때까지 라인 6-11부분이 무한 반봅됩니다.
-            {
-                int a = rd.read();
-                if(a==-1)  //ctrl -z가 입력되면 read()는 -1을 리턴
-                {
-                    break;
-                }
-                System.out.print((char)a); //입력된 문자 출력
-//                if (a == '\r' || a == '\n') {
-//                	rd.read(); rd.read();
-//                }
-            }
-        }
-        catch(IOException e)
-        {
-            System.out.println("입력 오류 발생");
-        }
+		int[] count = new int[26];
+		try {
+			while (true)
+			{
+				int a = rd.read();
+				if (a == -1)
+				{
+					break;
+				}
+				else if (a >= 'a' && a <= 'z') {
+					count[a - 'a'] += 1;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("입력 오류 발생");	
+		}
+		for (int i = 0; i < count.length; i++) {
+			System.out.print((char) (i + 65) + ">");
+			for (int j = 0; j < count[i]; j++) {
+				System.out.print("-");
+			} System.out.println();
+		}
 	}
 }
