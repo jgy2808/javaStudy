@@ -16,10 +16,10 @@ public class AlphabetHistogram {
                 {
                     break;
                 }
-                if (a == '\r' || a == '\n') {
-                	rd.read(); rd.read();
-                }
-                System.out.println((char)a + " , " + a); //입력된 문자 출력
+                System.out.print((char)a); //입력된 문자 출력
+//                if (a == '\r' || a == '\n') {
+//                	rd.read(); rd.read();
+//                }
             }
         }
         catch(IOException e)
