@@ -7,28 +7,25 @@ public class StringQueryClass {
 		String val = "";
 		boolean iskey = true;
 		boolean isval = false;
-		for (int i = 0; i < args.length; i++) {
-			if (!args[i].equals("=") && iskey) {
-				key = key.concat(args[i]);
+		for (int i = 0; i < args[0].length(); i++) {
+			if (args[0].charAt(i) != '=' && iskey) {
+				key = key + String.valueOf(args[0].charAt(i));
 			}
-			else if (args[i].equals("=")){
+			else if (args[0].charAt(i) == '='){
 				iskey = false;
 				isval = true;
 			}
-			if (!args[i].equals("&") && isval) {
-				val = val.concat(args[i]);
+			else if (args[0].charAt(i) != '&' && isval) {
+				val = val + String.valueOf(args[0].charAt(i));
 			}
-			else if (args[i].equals("&")){
+			if (args[0].charAt(i) == '&' || i == args[0].length()-1){
 				isval = false;
 				iskey = true;
-				System.out.printf("%10s%s", key, val);
+				System.out.printf("%s\t%s", key, val);
 				System.out.println();
 				key = "";
 				val = "";
 			}
-			
 		}
-
 	}
-
 }
