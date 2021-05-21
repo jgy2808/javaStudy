@@ -36,10 +36,8 @@ public class PhoneBookClass {
 	public static boolean FoundKey(String name, HashMap map) {
 		Set<String> keys = map.keySet();
 		Iterator<String> it = keys.iterator();
-		String key;
 		while(it.hasNext()) {
-			key = it.next();
-			if (key.equals(name)) {
+			if (it.next().equals(name)) {
 				return true;
 			}
 		}
@@ -73,24 +71,8 @@ public class PhoneBookClass {
 
 					if (FoundKey(name, map)) {
 						System.out.println(name + "은(는) 이미 존재하는 사람입니다.");
-						break;
 					}
 					else {
-						p = new Phone(address, phoneNum);
-						map.put(name, p);
-					}
-					
-					keys = map.keySet();
-					it = keys.iterator();
-					while (it.hasNext()) {
-						key = it.next();
-						if (name.equals(key)) {
-							System.out.println(key + "은(는) 이미 존재하는 사람입니다.");
-							name = "";
-							break;
-						}
-					}
-					if (name != "") {
 						p = new Phone(address, phoneNum);
 						map.put(name, p);
 					}
@@ -98,36 +80,22 @@ public class PhoneBookClass {
 				case 1:
 					System.out.print("삭제할 이름 >>");
 					name = sc.next();
-					keys = map.keySet();
-					it = keys.iterator();
-					int size = map.size();
-					while (it.hasNext()) {
-						key = it.next();
-						if (name.equals(key)) {
-							map.remove(key);
-							System.out.println(key + "은(는) 삭제되었습니다.");
-							break;
-						}
+					if (FoundKey(name, map)) {
+						map.remove(name);
+						System.out.println(name + "은(는) 삭제되었습니다.");
 					}
-					if (size == map.size()) {
+					else {
 						System.out.println(name + "은(는) 등록되지 않은 사람입니다.");
 					}
 					break;
 				case 2:
-					System.out.print("이름 >>");
+					System.out.print("찾을 이름 >>");
 					name = sc.next();
-					keys = map.keySet();
-					it = keys.iterator();
-					p = null;
-					while (it.hasNext()) {
-						key = it.next();
-						if (name.equals(key)) {
-							p = map.get(key);
-							System.out.println(key + " " + p.getAddress() + " " + p.getPhoneNum());
-							break;
-						}
+					if (FoundKey(name, map)) {
+						p = map.get(name);
+						System.out.println(name + " " + p.getAddress() + " " + p.getPhoneNum());
 					}
-					if (p == null) {
+					else {
 						System.out.println(name + "은(는) 등록되지 않은 사람입니다.");
 					}
 					break;
@@ -152,7 +120,5 @@ public class PhoneBookClass {
 				System.out.println("다시 입력해주세요.");
 			}
 		}
-
 	}
-
 }
