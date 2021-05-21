@@ -32,17 +32,6 @@ public class PhoneBookClass {
 		}
 
 	}
-	
-	public static boolean FoundKey(String name, HashMap map) {
-		Set<String> keys = map.keySet();
-		Iterator<String> it = keys.iterator();
-		while(it.hasNext()) {
-			if (it.next().equals(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public static void main(String[] args) {
 		System.out.println("-----------------------------------");
@@ -69,7 +58,7 @@ public class PhoneBookClass {
 					System.out.print("전화번호 >>");
 					phoneNum = sc.next();
 
-					if (FoundKey(name, map)) {
+					if (map.containsKey(name)) {
 						System.out.println(name + "은(는) 이미 존재하는 사람입니다.");
 					}
 					else {
@@ -80,7 +69,7 @@ public class PhoneBookClass {
 				case 1:
 					System.out.print("삭제할 이름 >>");
 					name = sc.next();
-					if (FoundKey(name, map)) {
+					if (map.containsKey(name)) {
 						map.remove(name);
 						System.out.println(name + "은(는) 삭제되었습니다.");
 					}
@@ -91,7 +80,7 @@ public class PhoneBookClass {
 				case 2:
 					System.out.print("찾을 이름 >>");
 					name = sc.next();
-					if (FoundKey(name, map)) {
+					if (map.containsKey(name)) {
 						p = map.get(name);
 						System.out.println(name + " " + p.getAddress() + " " + p.getPhoneNum());
 					}
@@ -114,7 +103,6 @@ public class PhoneBookClass {
 				default:
 					System.out.println("다시 입력해주세요:");
 				}
-
 			} catch (Exception e) {
 				sc = new Scanner(System.in);
 				System.out.println("다시 입력해주세요.");
