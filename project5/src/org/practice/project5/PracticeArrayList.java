@@ -24,12 +24,32 @@ public class PracticeArrayList {
 			c = sc.next();
 			if (InGrade(c)) {
 				al.add(c.charAt(0));
+				System.out.println(al.size());
 			}
-			System.out.println(al.size());
+			else {
+				System.out.println("다시 입력");
+			}
 		}
 		Iterator<Character> it = al.iterator();
 		while(it.hasNext()) {
-			System.out.println(it.next());
+			System.out.print(it.next() + ">>");
+			switch(it.next()) {
+			case 'A' :
+				System.out.println(5);
+				break;
+			case 'B' :
+				System.out.println(4);
+				break;
+			case 'C' :
+				System.out.println(3);
+				break;
+			case 'D' :
+				System.out.println(2);
+				break;
+			case 'F' :
+				System.out.println(1);
+				break;
+			}
 		}
 	}
 }
