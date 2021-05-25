@@ -30,10 +30,12 @@ public class PracticeArrayList {
 				System.out.println("다시 입력");
 			}
 		}
+		char ci;
 		Iterator<Character> it = al.iterator();
 		while(it.hasNext()) {
-			System.out.print(it.next() + ">>");
-			switch(it.next()) {
+			ci = it.next();
+			System.out.print(ci + ">>");
+			switch(ci) {
 			case 'A' :
 				System.out.println(5);
 				break;
