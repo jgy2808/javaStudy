@@ -24,15 +24,15 @@ public class PracticeMousePressed extends JFrame {
 	}
 	
 	class MyMouseListener implements MouseListener {
-		public void mouseClicked(MouseEvent e) {}
+		public void mouseClicked(MouseEvent e) {
+			int x = e.getX();
+			int y = e.getY();
+			jl.setLocation(x, y);}
 		public void mouseReleased(MouseEvent e) {}
 		public void mouseEntered(MouseEvent e) {}
 		public void mouseExited(MouseEvent e) {}
 
 		public void mousePressed(MouseEvent e) {
-			int x = e.getX();
-			int y = e.getY();
-			jl.setLocation(x, y);
 		}
 	}
 	
