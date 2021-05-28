@@ -7,12 +7,12 @@ import java.awt.event.*;
 public class ImageSlideSwing extends JFrame {
 	Container contentPane;
 	ImageIcon[] image = {
-			new ImageIcon("image/IU1.jpg"),
-			new ImageIcon("image/IU2.jpg"),
-			new ImageIcon("image/IU3.jpg"),
-			new ImageIcon("image/IU4.jpg")
+			new ImageIcon("image/bg1.jpg"),
+			new ImageIcon("image/bg2.jpg"),
+			new ImageIcon("image/bg3.jpg")
 	};
-	JLabel imgla = new JLabel(image[0]);
+	ImageIcon img = new ImageIcon("images/bg1.jpg");
+	JLabel imgla = new JLabel(img);
 	JButton lb = new JButton("¡ç");
 	JButton rb = new JButton("¡æ");
 	int imgindex = 0;
@@ -22,6 +22,7 @@ public class ImageSlideSwing extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
+		contentPane.setBackground(Color.WHITE);
 		
 		contentPane.add(imgla, BorderLayout.CENTER);
 		imgla.setHorizontalAlignment(SwingConstants.CENTER);
@@ -38,6 +39,7 @@ public class ImageSlideSwing extends JFrame {
 	private class MenuPanel extends JPanel{
 		MenuPanel(){
 			setLayout(new FlowLayout());
+			setBackground(Color.GRAY);
 			lb.setSize(50, 50);
 			rb.setSize(50, 50);
 			lb.addActionListener(new MyActionListener());
@@ -52,7 +54,7 @@ public class ImageSlideSwing extends JFrame {
 			if(e.getSource() == lb && imgindex > 0) {
 				imgla.setIcon(image[imgindex--]);
 			}
-			else if (e.getSource() == rb && imgindex < 3) {
+			else if (e.getSource() == rb && imgindex < 2) {
 				imgla.setIcon(image[imgindex++]);
 			}
 		}
