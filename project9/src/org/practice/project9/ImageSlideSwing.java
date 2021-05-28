@@ -10,8 +10,8 @@ public class ImageSlideSwing extends JFrame {
 			new ImageIcon("image/bg1.jpg"),
 			new ImageIcon("image/bg2.jpg"),
 			new ImageIcon("image/bg3.jpg")
-	};
-	ImageIcon img = new ImageIcon("images/bg1.jpg");
+	};		
+	ImageIcon img = new ImageIcon("bg1.png");
 	JLabel imgla = new JLabel(img);
 	JButton lb = new JButton("¡ç");
 	JButton rb = new JButton("¡æ");
@@ -23,7 +23,9 @@ public class ImageSlideSwing extends JFrame {
 		contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(Color.WHITE);
+
 		
+		System.out.println(imgla.getIcon());
 		contentPane.add(imgla, BorderLayout.CENTER);
 		imgla.setHorizontalAlignment(SwingConstants.CENTER);
 		
