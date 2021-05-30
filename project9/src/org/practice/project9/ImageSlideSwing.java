@@ -7,12 +7,11 @@ import java.awt.event.*;
 public class ImageSlideSwing extends JFrame {
 	Container contentPane;
 	ImageIcon[] image = {
-			new ImageIcon("image/bg1.jpg"),
-			new ImageIcon("image/bg2.jpg"),
-			new ImageIcon("image/bg3.jpg")
-	};		
-	ImageIcon img = new ImageIcon("images/bg1.png");
-	JLabel imgla = new JLabel("CENTER");
+			new ImageIcon("images/bg1.png"),
+			new ImageIcon("images/bg2.png"),
+			new ImageIcon("images/bg3.png")
+	};
+	JLabel imgla = new JLabel(image[0]);
 	JButton lb = new JButton("¡ç");
 	JButton rb = new JButton("¡æ");
 	int imgindex = 0;
