@@ -52,10 +52,10 @@ public class ImageSlideSwing extends JFrame {
 	private class MyActionListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource() == lb && imgindex > 0) {
-				imgla.setIcon(image[imgindex--]);
+				imgla.setIcon(image[--imgindex]);
 			}
 			else if (e.getSource() == rb && imgindex < 2) {
-				imgla.setIcon(image[imgindex++]);
+				imgla.setIcon(image[++imgindex]);
 			}
 		}
 	}
