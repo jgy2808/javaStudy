@@ -1,6 +1,7 @@
 package org.practice.project9;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -27,8 +28,11 @@ public class PracticeSlider extends JFrame {
 		js.addChangeListener(new MyChangeListener());
 		c.add(js, BorderLayout.NORTH);
 		
-		la.setBackground(Color.YELLOW);
+		
+		la.setBackground(Color.CYAN);
 		la.setFont(new Font("Aial", Font.PLAIN, js.getValue()));
+		la.setHorizontalAlignment(JLabel.CENTER);
+		la.setVerticalAlignment(JLabel.CENTER);
 		c.add(la, BorderLayout.CENTER);
 		
 		setSize(400, 400);
