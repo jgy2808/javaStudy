@@ -6,41 +6,34 @@ import java.awt.event.*;
 
 public class PracticeJLabelImageDrag extends JFrame {
 	Container c;
+	ImageIcon img = new ImageIcon("images/bg1.png");
+	JLabel l = new JLabel(img);
+	int lX = 50;
+	int lY = 50;
 	
 	public PracticeJLabelImageDrag() {
 		setTitle("JLabel Image Drag Ex");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		c = getContentPane();
+		c.setLayout(null);
 		
-		MyPanel p = new MyPanel();
-		c.add(p);
 		
+		l.setSize(img.getIconWidth(), img.getIconHeight());
+		l.addMouseMotionListener(new MyListener());
+		c.add(l);
 		
 		setSize(500, 500);
 		setVisible(true);
 	}
 	
-	private class MyPanel extends JPanel{
-		ImageIcon icon = new ImageIcon("images/bg1.png");
-		Image img = icon.getImage();
-		int gX = 50;
-		int gY = 50;
-		public MyPanel(){
-			addMouseMotionListener(new MouseAdapter() {
-				public void mouseDragged(MouseEvent e) {
-					gX = e.getX();
-					gY = e.getY();
-					repaint();
-				}
-			});
-			
-		}
-		
-		public void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.drawImage(img, gX, gY, 50, 50, this);
+	private class MyListener extends MouseAdapter{
+		public void mouseDragged(MouseEvent e) {
+			lX = e.getX();
+			lY = e.getY();
+			l.setLocation(lX, lY);
 		}
 	}
+	
 	public static void main(String[] args) {
 		new PracticeJLabelImageDrag();
 
