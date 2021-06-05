@@ -8,8 +8,8 @@ public class PracticeJLabelImageDrag extends JFrame {
 	Container c;
 	ImageIcon img = new ImageIcon("images/bg1.png");
 	JLabel l = new JLabel(img);
-	int lX = 50;
-	int lY = 50;
+	JLabel x = new JLabel("X = " + l.getX());
+	JLabel y = new JLabel("Y = " + l.getY());
 	
 	public PracticeJLabelImageDrag() {
 		setTitle("JLabel Image Drag Ex");
@@ -17,7 +17,12 @@ public class PracticeJLabelImageDrag extends JFrame {
 		c = getContentPane();
 		c.setLayout(null);
 		
-		
+		x.setSize(70, 50);
+		x.setLocation(0, 0);
+		c.add(x);
+		y.setSize(70, 50);
+		y.setLocation(100, 0);
+		c.add(y);
 		l.setSize(img.getIconWidth(), img.getIconHeight());
 		l.addMouseMotionListener(new MyListener());
 		c.add(l);
@@ -28,9 +33,9 @@ public class PracticeJLabelImageDrag extends JFrame {
 	
 	private class MyListener extends MouseAdapter{
 		public void mouseDragged(MouseEvent e) {
-			lX = e.getX();
-			lY = e.getY();
-			l.setLocation(lX, lY);
+			l.setLocation(e.getX(), e.getY());
+			x.setText("X = " + l.getX());
+			y.setText("Y = " + l.getY());
 		}
 	}
 	
