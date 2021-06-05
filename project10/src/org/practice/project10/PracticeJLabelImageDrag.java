@@ -24,9 +24,9 @@ public class PracticeJLabelImageDrag extends JFrame {
 		y.setLocation(100, 0);
 		c.add(y);
 		l.setSize(img.getIconWidth(), img.getIconHeight());
-		l.addMouseMotionListener(new MyListener());
 		c.add(l);
-		
+
+		c.addMouseMotionListener(new MyListener());
 		setSize(500, 500);
 		setVisible(true);
 	}
