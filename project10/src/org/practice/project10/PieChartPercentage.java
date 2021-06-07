@@ -16,10 +16,7 @@ public class PieChartPercentage extends JFrame {
 	JTextField strawberryTF = new JTextField("0", 5);
 	JTextField pruneTF = new JTextField("0", 5);
 	
-	int sum = Integer.parseInt(appleTF.getText()) +
-			Integer.parseInt(cherryTF.getText()) +
-			Integer.parseInt(strawberryTF.getText()) +
-			Integer.parseInt(pruneTF.getText());
+	float sum;
 	int appleVal;
 	int cherryVal;
 	int strawberryVal;
@@ -64,14 +61,14 @@ public class PieChartPercentage extends JFrame {
 	private class EnterListener extends KeyAdapter{
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				sum = Integer.parseInt(appleTF.getText()) +
-						Integer.parseInt(cherryTF.getText()) +
-						Integer.parseInt(strawberryTF.getText()) +
-						Integer.parseInt(pruneTF.getText());
-				appleVal = Integer.parseInt(appleTF.getText())*100/sum;
-				cherryVal = Integer.parseInt(cherryTF.getText())*100/sum;
-				strawberryVal = Integer.parseInt(strawberryTF.getText())*100/sum;
-				pruneVal = Integer.parseInt(pruneTF.getText())*100/sum;
+				sum = Float.parseFloat(appleTF.getText()) +
+						Float.parseFloat(cherryTF.getText()) +
+						Float.parseFloat(strawberryTF.getText()) +
+						Float.parseFloat(pruneTF.getText());
+				appleVal = (int) Math.ceil(Integer.parseInt(appleTF.getText())*100/sum);
+				cherryVal = Math.round(Integer.parseInt(cherryTF.getText())*100/sum);
+				strawberryVal = Math.round(Integer.parseInt(strawberryTF.getText())*100/sum);
+				pruneVal = Math.round(Integer.parseInt(pruneTF.getText())*100/sum);
 				
 				applePer1.setText("apple " + appleVal + "%");
 				cherryPer1.setText("cherry " + cherryVal + "%");
@@ -101,24 +98,28 @@ public class PieChartPercentage extends JFrame {
 		
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
-			g.setColor(Color.GREEN);
 			int r = getWidth()*70/100;
 			int x = getWidth()/2 - r/2;
 			int y = getHeight()/2 - r/2 + 10;
-			g.fillArc(x, y, r, r, 0, 360);
+			
+			int appleAngle = (int)Math.ceil(appleVal*3.6);
+			int cherryAngle = (int) Math.round(cherryVal*3.6);
+			int strawberryAngle = (int) Math.round(strawberryVal*3.6);
+			int pruneAngle = (int) Math.round(pruneVal*3.6);
+			
+			
 			g.setColor(Color.RED);
-			g.fillArc(x, y, r, r, 0, 360*appleVal/100);
+			g.fillArc(x, y, r, r, 0, appleAngle);
 			g.setColor(Color.MAGENTA);
-			g.fillArc(x, y, r, r, 360*appleVal/100, 360*cherryVal/100);
+			g.fillArc(x, y, r, r, appleAngle, cherryAngle);
 			g.setColor(Color.PINK);
-			g.fillArc(x, y, r, r, 360*appleVal/100+360*cherryVal/100, 360*strawberryVal/100);
+			g.fillArc(x, y, r, r, appleAngle+cherryAngle, strawberryAngle);
 			g.setColor(Color.ORANGE);
-			g.fillArc(x, y, r, r, 360*appleVal/100+360*cherryVal/100+360*strawberryVal/100, 360*pruneVal/100);
+			g.fillArc(x, y, r, r, appleAngle+cherryAngle+strawberryAngle, pruneAngle);
 		}
 	}
 
 	public static void main(String[] args) {
 		new PieChartPercentage();
 	}
-
 }
