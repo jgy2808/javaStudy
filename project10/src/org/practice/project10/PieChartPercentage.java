@@ -6,16 +6,31 @@ import java.awt.event.*;
 public class PieChartPercentage extends JFrame {
 	Container c;
 	
+	JLabel appleL = new JLabel("apple");
+	JLabel cherryL = new JLabel("cherry");
+	JLabel strawberryL = new JLabel("strawberry");
+	JLabel pruneL = new JLabel("prune");
+	
 	JTextField appleTF = new JTextField("0", 5);
 	JTextField cherryTF = new JTextField("0", 5);
 	JTextField strawberryTF = new JTextField("0", 5);
 	JTextField pruneTF = new JTextField("0", 5);
 	
-	JLabel applePer = new JLabel("apple");
-	JLabel cherryPer = new JLabel("cherry");
-	JLabel strawberryPer = new JLabel("strawberry");
-	JLabel prunePer = new JLabel("prune");
+	int sum = Integer.parseInt(appleTF.getText()) +
+			Integer.parseInt(cherryTF.getText()) +
+			Integer.parseInt(strawberryTF.getText()) +
+			Integer.parseInt(pruneTF.getText());
+	int appleVal;
+	int cherryVal;
+	int strawberryVal;
+	int pruneVal;	
 	
+	JLabel applePer1 = new JLabel("apple ");
+	JLabel cherryPer1 = new JLabel("cherry ");
+	JLabel strawberryPer1 = new JLabel("strawberry ");
+	JLabel prunePer1 = new JLabel("prune ");
+	
+	MyPanel chartP = new MyPanel();	
 	
 	public PieChartPercentage() {
 		setTitle("PieChart Percentage");
@@ -25,10 +40,6 @@ public class PieChartPercentage extends JFrame {
 		JPanel northP = new JPanel();
 		northP.setLayout(new FlowLayout());
 		northP.setBackground(Color.GRAY);
-		JLabel appleL = new JLabel("apple");
-		JLabel cherryL = new JLabel("cherry");
-		JLabel strawberryL = new JLabel("strawberry");
-		JLabel pruneL = new JLabel("prune");
 		appleTF.addKeyListener(new EnterListener());
 		cherryTF.addKeyListener(new EnterListener());
 		strawberryTF.addKeyListener(new EnterListener());
@@ -42,19 +53,9 @@ public class PieChartPercentage extends JFrame {
 		northP.add(pruneL);
 		northP.add(pruneTF);
 		
-		JPanel centerP = new JPanel();
-		centerP.setLayout(new FlowLayout());
-		applePer.setForeground(Color.RED);
-		cherryPer.setForeground(Color.MAGENTA);
-		strawberryPer.setForeground(Color.PINK);
-		prunePer.setForeground(Color.ORANGE);
-		centerP.add(applePer);
-		centerP.add(cherryPer);
-		centerP.add(strawberryPer);
-		centerP.add(prunePer);
-		
-		c.add(centerP, BorderLayout.CENTER);
 		c.add(northP, BorderLayout.NORTH);
+
+		c.add(chartP);
 		setSize(500, 500);
 		setVisible(true);
 		
@@ -63,31 +64,56 @@ public class PieChartPercentage extends JFrame {
 	private class EnterListener extends KeyAdapter{
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				int sum = Integer.parseInt(appleTF.getText()) +
+				sum = Integer.parseInt(appleTF.getText()) +
 						Integer.parseInt(cherryTF.getText()) +
 						Integer.parseInt(strawberryTF.getText()) +
 						Integer.parseInt(pruneTF.getText());
+				appleVal = Integer.parseInt(appleTF.getText())*100/sum;
+				cherryVal = Integer.parseInt(cherryTF.getText())*100/sum;
+				strawberryVal = Integer.parseInt(strawberryTF.getText())*100/sum;
+				pruneVal = Integer.parseInt(pruneTF.getText())*100/sum;
 				
-				applePer.setText("apple " + Integer.parseInt(appleTF.getText())/sum*100 +"%");
-				cherryPer.setText("cherry " + Integer.parseInt(cherryTF.getText())/sum*100 +"%");
-				strawberryPer.setText("strawberry " + Integer.parseInt(strawberryTF.getText())/sum*100 +"%");
-				prunePer.setText("prune " + Integer.parseInt(pruneTF.getText())/sum*100 +"%");
+				applePer1.setText("apple " + appleVal + "%");
+				cherryPer1.setText("cherry " + cherryVal + "%");
+				strawberryPer1.setText("strawberry " + strawberryVal + "%");
+				prunePer1.setText("prune " + pruneVal + "%");
 				
+				chartP.repaint();
 			}
 		}
 	}
 	
 	private class MyPanel extends JPanel{
 		
-		public MyPanel() {
+		MyPanel(){
+			applePer1.setForeground(Color.RED);
+			cherryPer1.setForeground(Color.MAGENTA);
+			strawberryPer1.setForeground(Color.PINK);
+			prunePer1.setForeground(Color.ORANGE);
 			
+			add(applePer1);
+			add(cherryPer1);
+			add(strawberryPer1);
+			add(prunePer1);
+			
+			repaint();
 		}
-		
 		
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.setColor(Color.GREEN);
-			g.fillArc(100, 150, 150, 150, 0, 360);
+			int r = getWidth()*70/100;
+			int x = getWidth()/2 - r/2;
+			int y = getHeight()/2 - r/2 + 10;
+			g.fillArc(x, y, r, r, 0, 360);
+			g.setColor(Color.RED);
+			g.fillArc(x, y, r, r, 0, 360*appleVal/100);
+			g.setColor(Color.MAGENTA);
+			g.fillArc(x, y, r, r, 360*appleVal/100, 360*cherryVal/100);
+			g.setColor(Color.PINK);
+			g.fillArc(x, y, r, r, 360*appleVal/100+360*cherryVal/100, 360*strawberryVal/100);
+			g.setColor(Color.ORANGE);
+			g.fillArc(x, y, r, r, 360*appleVal/100+360*cherryVal/100+360*strawberryVal/100, 360*pruneVal/100);
 		}
 	}
 
