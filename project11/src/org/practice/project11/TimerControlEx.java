@@ -4,63 +4,46 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class MyLabel extends JLabel {
-	int n = 0;
-	Thread th;
-
-	MyLabel(Thread th) {
-		this.th = th;
+class MyLabel2 extends JLabel{
+	MyLabel2(String text){
+		super(text);
 	}
-
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		setText(Integer.toString(n));
-		setFont(new Font("Gothic", Font.ITALIC, 80));
+		
 	}
-
 	synchronized public void pause() {
-		if (th.isAlive()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return;
-			}
+		System.out.println("MyLabel pause");
+		try {
+			wait();
+			System.out.println("MyLabel2 pause try");
+		} catch (InterruptedException e) {
+			System.out.println("MyLabel2 pause catch");
 		}
-		n = 0;
-		repaint();
-		notify();
 	}
-
 	synchronized public void start() {
-		if (!th.isAlive()) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				return;
-			}
-		}
-		n++;
-		repaint();
 		notify();
 	}
 }
 
 class TimerThread2 extends Thread {
-	MyLabel my;
-
-	TimerThread2(MyLabel my) {
-		this.my = my;
+	MyLabel2 label;
+	TimerThread2(MyLabel2 label) {
+		this.label = label;
 	}
 
 	public void run() {
 		System.out.println("run");
+		int n = 0;
 		while (true) {
+			label.setText(Integer.toString(n));
+			n++;
 			try {
 				sleep(100);
-				my.start();
 			} catch (InterruptedException e) {
+				n = 0;
 				System.out.println("run exception !!");
-				return;
+				label.pause();
 			}
 		}
 	}
@@ -73,14 +56,22 @@ public class TimerControlEx extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 		
-		TimerThread2 timer = null;
-		MyLabel timerlabel = new MyLabel(timer);
-		timer = new TimerThread2(timerlabel);
+		MyLabel2 timerlabel = new MyLabel2("0");
+		TimerThread2 timer = new TimerThread2(timerlabel);
 		c.add(timerlabel);
 
 		c.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				timerlabel.pause();
+				System.out.println("isAlive true");
+				timer.interrupt();
+//				if (timer.isAlive()) {
+//					System.out.println("isAlive true");
+//					timer.interrupt();
+//				}
+//				else if (!timer.isAlive()) {
+//					System.out.println("isAlive false");
+//					timerlabel.start();
+//				}
 			}
 		});
 
