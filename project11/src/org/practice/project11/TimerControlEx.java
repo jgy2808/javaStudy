@@ -5,13 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 class MyLabel2 extends JLabel{
-	MyLabel2(String text){
-		super(text);
+	MyLabel2(){
+		setText("0");
+		setFont(new Font("Gothic", Font.ITALIC, 80));
 	}
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		
-	}
+	
 	synchronized public void pause() {
 		System.out.println("MyLabel pause");
 		try {
@@ -20,9 +18,6 @@ class MyLabel2 extends JLabel{
 		} catch (InterruptedException e) {
 			System.out.println("MyLabel2 pause catch");
 		}
-	}
-	synchronized public void start() {
-		notify();
 	}
 }
 
@@ -56,33 +51,24 @@ public class TimerControlEx extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 		
-		MyLabel2 timerlabel = new MyLabel2("0");
+		MyLabel2 timerlabel = new MyLabel2();
 		TimerThread2 timer = new TimerThread2(timerlabel);
 		c.add(timerlabel);
 
 		c.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				System.out.println("isAlive true");
-				timer.interrupt();
-//				if (timer.isAlive()) {
-//					System.out.println("isAlive true");
-//					timer.interrupt();
-//				}
-//				else if (!timer.isAlive()) {
-//					System.out.println("isAlive false");
-//					timerlabel.start();
-//				}
+				if (!timer.isAlive()) 
+					timer.start();
+				else if (timer.isAlive())
+					timer.interrupt();
 			}
 		});
 
 		setSize(300, 300);
 		setVisible(true);
-
-		timer.start();
 	}
 
 	public static void main(String[] args) {
 		new TimerControlEx();
 	}
-
 }
