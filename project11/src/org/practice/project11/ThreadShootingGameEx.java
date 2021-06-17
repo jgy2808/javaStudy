@@ -9,9 +9,28 @@ class TargetPanel extends JPanel {
 	TargetPanel(Image img){
 		this.img = img;
 	}
+	
+	public void Comeback() {
+		setLocation(350, 10);
+	}
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+	}
+}
+
+class BulletPanel extends JPanel {
+	int x, y;
+	
+	public void Shoot() {
+		setLocation(this.getX(), this.getY() - 5);
+	}
+
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, 6, 6);
 	}
 }
 
@@ -20,16 +39,6 @@ class ShooterPanel extends JPanel {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-	}
-}
-
-class BulletPanel extends JPanel {
-	int x, y;
-
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.setColor(Color.RED);
-		g.fillRect(0, 0, 6, 6);
 	}
 }
 
@@ -53,11 +62,9 @@ class TargetThread extends Thread {
 		while (true) {
 			target.setLocation(target.getX() - 5, target.getY());
 			if (target.getX() == -50) {
-				target.setLocation(350, 10);
+				target.Comeback();
 			}
-			if (isMeet()) {
-				bp.setLocation(null);
-				
+			if (isMeet()) {				
 				try {
 					sleep(1500);
 				} catch (InterruptedException e) {
@@ -75,10 +82,36 @@ class TargetThread extends Thread {
 	}
 }
 
-class ShootThread extends Thread {
+class BulletThread extends Thread {
+	BulletPanel bp;
+	TargetPanel target;
+	BulletThread(BulletPanel bp, TargetPanel target) {
+		this.bp = bp;
+		this.target = target;
+	}
+	
+	boolean isMeet() {
+		if ((bp.getX() >= target.getX() && bp.getX() <= target.getX() + target.getWidth() &&
+				bp.getY() <= target.getY() + target.getHeight()) || bp.getY() < 0) {
+			return true;
+		}
+		return false;
+	}
 	
 	public void run() {
-		
+		while(true) {
+			bp.Shoot();
+			try {
+				sleep(50);
+			} catch (InterruptedException e) {
+				System.out.println("Bullet Thread Error");
+				return;
+			}
+			if (isMeet()) {
+				bp.setLocation(400/2 - 3, 400-100 - 6);
+				return;
+			}
+		}
 	}
 }
 
@@ -111,11 +144,13 @@ public class ThreadShootingGameEx extends JFrame {
 		shooter.setSize(50, 50);
 		shooter.setLocation(400/2 - shooter.getWidth()/2, 400 - shooter.getHeight() - 50);
 		c.add(shooter);
+
+		BulletThread bth = new BulletThread(bp, target);
 		
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					
+					System.out.println("enter1");
 				}
 			}
 		});
@@ -126,6 +161,7 @@ public class ThreadShootingGameEx extends JFrame {
 		c.requestFocus();
 		
 		th.start();
+		bth.start();
 	}
 
 	public static void main(String[] args) {
