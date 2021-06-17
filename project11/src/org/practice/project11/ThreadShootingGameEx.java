@@ -22,11 +22,26 @@ class TargetPanel extends JPanel {
 
 class BulletPanel extends JPanel {
 	int x, y;
-	
+	boolean isMoving = false;
 	public void Shoot() {
 		setLocation(this.getX(), this.getY() - 5);
 	}
-
+	
+	public void Moving() {
+		isMoving = true;
+	}
+	public void NotMoving() {
+		isMoving = false;
+	}
+	
+	boolean getIsMoving() {
+		return isMoving;
+	}
+	
+	public void Comeback() {
+		setLocation(400/2 - 3, 400-100 - 6);
+	}
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.RED);
@@ -52,7 +67,7 @@ class TargetThread extends Thread {
 	
 	boolean isMeet() {
 		if (bp.getX() >= target.getX() && bp.getX() <= target.getX() + target.getWidth() &&
-				bp.getY() <= target.getY() + target.getHeight()) {
+				bp.getY() <= target.getY() + target.getHeight() + 6) {
 			return true;
 		}
 		return false;
@@ -61,16 +76,8 @@ class TargetThread extends Thread {
 	public void run() {
 		while (true) {
 			target.setLocation(target.getX() - 5, target.getY());
-			if (target.getX() == -50) {
+			if (target.getX() == -50 || isMeet()) {
 				target.Comeback();
-			}
-			if (isMeet()) {				
-				try {
-					sleep(1500);
-				} catch (InterruptedException e) {
-					return;
-				}
-				target.setLocation(350, 10);
 			}
 			try {
 				sleep(200);
@@ -99,17 +106,21 @@ class BulletThread extends Thread {
 	}
 	
 	public void run() {
+		System.out.println(bp.getIsMoving());
 		while(true) {
-			bp.Shoot();
-			try {
-				sleep(50);
-			} catch (InterruptedException e) {
-				System.out.println("Bullet Thread Error");
-				return;
+			System.out.println(bp.getIsMoving());
+			if (bp.getIsMoving()) {
+				bp.Shoot();
+				try {
+					sleep(50);
+				} catch (InterruptedException e) {
+					System.out.println("Bullet Thread Error");
+					return;
+				}
 			}
 			if (isMeet()) {
-				bp.setLocation(400/2 - 3, 400-100 - 6);
-				return;
+				bp.Comeback();
+				bp.NotMoving();
 			}
 		}
 	}
@@ -151,6 +162,9 @@ public class ThreadShootingGameEx extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					System.out.println("enter1");
+					System.out.println(bp.getIsMoving());
+					bp.Moving();
+					System.out.println(bp.getIsMoving());
 				}
 			}
 		});
