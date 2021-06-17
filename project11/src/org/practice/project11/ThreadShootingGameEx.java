@@ -4,6 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+class TargetPanel extends JPanel {
+	Image img;
+	TargetPanel(Image img){
+		this.img = img;
+	}
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+	}
+}
+
 class ShooterPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -14,10 +25,7 @@ class ShooterPanel extends JPanel {
 
 class BulletPanel extends JPanel {
 	int x, y;
-	public void shoot() {
-		this.setLocation(getX(), getY() - 5);
-	}
-	
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.RED);
@@ -26,16 +34,16 @@ class BulletPanel extends JPanel {
 }
 
 class TargetThread extends Thread {
-	JLabel label;
+	TargetPanel target;
 	BulletPanel bp;
-	public TargetThread(JLabel label, BulletPanel bp) {
-		this.label = label;
+	public TargetThread(TargetPanel target, BulletPanel bp) {
+		this.target = target;
 		this.bp = bp;
 	}
 	
 	boolean isMeet() {
-		if (bp.getX() >= label.getX() && bp.getX() <= label.getX() + label.getWidth() &&
-				bp.getY() <= label.getY() + label.getHeight()) {
+		if (bp.getX() >= target.getX() && bp.getX() <= target.getX() + target.getWidth() &&
+				bp.getY() <= target.getY() + target.getHeight()) {
 			return true;
 		}
 		return false;
@@ -43,9 +51,9 @@ class TargetThread extends Thread {
 	
 	public void run() {
 		while (true) {
-			label.setLocation(label.getX() - 5, label.getY());
-			if (label.getX() == -50) {
-				label.setLocation(350, 10);
+			target.setLocation(target.getX() - 5, target.getY());
+			if (target.getX() == -50) {
+				target.setLocation(350, 10);
 			}
 			if (isMeet()) {
 				bp.setLocation(null);
@@ -55,7 +63,7 @@ class TargetThread extends Thread {
 				} catch (InterruptedException e) {
 					return;
 				}
-				label.setLocation(350, 10);
+				target.setLocation(350, 10);
 			}
 			try {
 				sleep(200);
@@ -84,20 +92,18 @@ public class ThreadShootingGameEx extends JFrame {
 		c.setLayout(null);
 		
 		ImageIcon icon = new ImageIcon("images/bg1.png");
-		Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-		icon.setImage(img);
-		JLabel iconLabel = new JLabel();
-		iconLabel.setIcon(icon);
-		iconLabel.setSize(50, 50);
-		iconLabel.setLocation(350, 10);
+		Image img = icon.getImage();
+		TargetPanel target = new TargetPanel(img);
+		target.setSize(50, 50);
+		target.setLocation(350, 10);
 		
 		BulletPanel bp = new BulletPanel();
 		bp.setSize(6, 6);
 		bp.setLocation(400/2 - 3, 400-100 - 6);
 		
-		TargetThread th = new TargetThread(iconLabel, bp);
+		TargetThread th = new TargetThread(target, bp);
 		
-		c.add(iconLabel);
+		c.add(target);
 		c.add(bp);
 		
 		ShooterPanel shooter = new ShooterPanel();
@@ -109,7 +115,7 @@ public class ThreadShootingGameEx extends JFrame {
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					bp.shoot();
+					
 				}
 			}
 		});
