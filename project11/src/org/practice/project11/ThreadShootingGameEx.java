@@ -106,7 +106,6 @@ class BulletThread extends Thread {
 	}
 	
 	public void run() {
-		System.out.println(bp.getIsMoving());
 		while(true) {
 			System.out.println(bp.getIsMoving());
 			if (bp.getIsMoving()) {
@@ -128,7 +127,8 @@ class BulletThread extends Thread {
 
 
 public class ThreadShootingGameEx extends JFrame {
-	
+	final int BULLET_PANEL_X = 400/2 - 3;
+	final int BULLET_PANEL_Y = 400-100 - 6;
 	ThreadShootingGameEx() {
 		setTitle("Thread Shooting Game Ex");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -143,7 +143,7 @@ public class ThreadShootingGameEx extends JFrame {
 		
 		BulletPanel bp = new BulletPanel();
 		bp.setSize(6, 6);
-		bp.setLocation(400/2 - 3, 400-100 - 6);
+		bp.setLocation(BULLET_PANEL_X, BULLET_PANEL_Y);
 		
 		TargetThread th = new TargetThread(target, bp);
 		
@@ -161,10 +161,7 @@ public class ThreadShootingGameEx extends JFrame {
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					System.out.println("enter1");
-					System.out.println(bp.getIsMoving());
 					bp.Moving();
-					System.out.println(bp.getIsMoving());
 				}
 			}
 		});
