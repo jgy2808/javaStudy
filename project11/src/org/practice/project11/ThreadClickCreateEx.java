@@ -30,6 +30,7 @@ class BubbleThread extends Thread {
 				sleep(500);
 				if (bpanel.getY() + bpanel.getHeight() < 0) interrupt();
 			} catch (InterruptedException e) {
+				System.out.println("thread interrupted");
 				return;
 			}
 		}
@@ -53,6 +54,7 @@ public class ThreadClickCreateEx extends JFrame {
 		
 		c.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
+				bpanel[panelCount] = new BubblePanel(img);
 				bpanel[panelCount].setSize(50, 50);
 				bpanel[panelCount].setLocation(e.getX(), e.getY());
 				c.add(bpanel[panelCount]);
