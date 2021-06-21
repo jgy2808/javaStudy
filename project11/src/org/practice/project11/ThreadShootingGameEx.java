@@ -27,17 +27,6 @@ class BulletPanel extends JPanel {
 		setLocation(this.getX(), this.getY() - 5);
 	}
 	
-	public void Moving() {
-		isMoving = true;
-	}
-	public void NotMoving() {
-		isMoving = false;
-	}
-	
-	boolean getIsMoving() {
-		return isMoving;
-	}
-	
 	public void Comeback() {
 		setLocation(400/2 - 3, 400-100 - 6);
 	}
@@ -92,9 +81,14 @@ class TargetThread extends Thread {
 class BulletThread extends Thread {
 	BulletPanel bp;
 	TargetPanel target;
+	boolean isShot = false;
 	BulletThread(BulletPanel bp, TargetPanel target) {
 		this.bp = bp;
 		this.target = target;
+	}
+	
+	void setIsShotTrue() {
+		isShot = true;
 	}
 	
 	boolean isMeet() {
@@ -107,8 +101,8 @@ class BulletThread extends Thread {
 	
 	public void run() {
 		while(true) {
-			System.out.println(bp.getIsMoving());
-			if (bp.getIsMoving()) {
+			System.out.println(isShot);
+			if (isShot) {
 				bp.Shoot();
 				try {
 					sleep(50);
@@ -119,7 +113,7 @@ class BulletThread extends Thread {
 			}
 			if (isMeet()) {
 				bp.Comeback();
-				bp.NotMoving();
+				isShot = false;
 			}
 		}
 	}
@@ -161,7 +155,7 @@ public class ThreadShootingGameEx extends JFrame {
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					bp.Moving();
+					bth.setIsShotTrue();
 				}
 			}
 		});
