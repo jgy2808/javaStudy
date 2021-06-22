@@ -22,9 +22,28 @@ class TargetPanel extends JPanel {
 
 class BulletPanel extends JPanel {
 	int x, y;
-	boolean isMoving = false;
-	public void Shoot() {
+	boolean isShot = false;
+	synchronized public void Shoot() {
+		if (!isShot) {
+			try {
+				wait();
+			} catch (InterruptedException e) { return; }
+		}
 		setLocation(this.getX(), this.getY() - 5);
+		if (this.getY() < 0) {
+			isShot = false;
+			notify();
+		}
+	}
+	
+	synchronized public void setisShot() {
+		if (isShot) {
+			try {
+				wait();
+			} catch (InterruptedException e) { return; }
+		}
+		isShot = true;
+		notify();
 	}
 	
 	public void Comeback() {
@@ -66,64 +85,65 @@ class TargetThread extends Thread {
 	public void run() {
 		while (true) {
 			target.setLocation(target.getX() - 5, target.getY());
-			if (target.getX() == -50) {
-				target.Comeback();
-			}
-			if (this.isMeet()) {
-				target.Comeback();
-			}
+			bp.Shoot();
 			try {
 				sleep(200);
 			} catch (InterruptedException e) {
 				System.out.println("ObjMoveThread try");
 				return;
 			}
+			if (target.getX() == -50) {
+				target.Comeback();
+			}
+			if (this.isMeet()) {
+				target.Comeback();
+			}
 		}
 	}
 }
 
-class BulletThread extends Thread {
-	BulletPanel bp;
-	TargetPanel target;
-	boolean isShot = false;
-	BulletThread(BulletPanel bp, TargetPanel target) {
-		this.bp = bp;
-		this.target = target;
-	}
-	
-	void setIsShotTrue() {
-		isShot = true;
-	}
-	
-	boolean isMeet() {
-		if ((target.getX() <= bp.getX() && bp.getX() <= target.getX() + target.getWidth() &&
-				bp.getY() <= target.getY() + target.getHeight()) || bp.getY() < 0) {
-			System.out.println("Bullet Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + target.getX() + ", target y : " + target.getY());
-			return true;
-		}
-		return false;
-	}
-	
-	public void run() {
-		System.out.println(isShot);
-		while(true) {
-			isShot = true;
-			if (isShot) {
-				bp.Shoot();
-				try {
-					sleep(50);
-				} catch (InterruptedException e) {
-					System.out.println("Bullet Thread Error");
-					return;
-				}
-			}
-			if (this.isMeet()) {
-				bp.Comeback();
-				isShot = false;
-			}
-		}
-	}
-}
+//class BulletThread extends Thread {
+//	BulletPanel bp;
+//	TargetPanel target;
+//	boolean isShot = false;
+//	BulletThread(BulletPanel bp, TargetPanel target) {
+//		this.bp = bp;
+//		this.target = target;
+//	}
+//	
+//	void setIsShotTrue() {
+//		isShot = true;
+//	}
+//	
+//	boolean isMeet() {
+//		if ((target.getX() <= bp.getX() && bp.getX() <= target.getX() + target.getWidth() &&
+//				bp.getY() <= target.getY() + target.getHeight()) || bp.getY() < 0) {
+//			System.out.println("Bullet Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + target.getX() + ", target y : " + target.getY());
+//			return true;
+//		}
+//		return false;
+//	}
+//	
+//	public void run() {
+//		System.out.println(isShot);
+//		while(true) {
+//			isShot = true;
+//			if (isShot) {
+//				bp.Shoot();
+//				try {
+//					sleep(50);
+//				} catch (InterruptedException e) {
+//					System.out.println("Bullet Thread Error");
+//					return;
+//				}
+//			}
+//			if (this.isMeet()) {
+//				bp.Comeback();
+//				isShot = false;
+//			}
+//		}
+//	}
+//}
 
 
 public class ThreadShootingGameEx extends JFrame {
@@ -156,15 +176,12 @@ public class ThreadShootingGameEx extends JFrame {
 		shooter.setSize(50, 50);
 		shooter.setLocation(400/2 - shooter.getWidth()/2, 400 - shooter.getHeight() - 50);
 		c.add(shooter);
-
-		BulletThread bth = new BulletThread(bp, target);
 		
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					System.out.println("pressed Enter");
-					bth.setIsShotTrue();
-					System.out.println(bth.isShot);
+					bp.setisShot();
 				}
 			}
 		});
@@ -175,7 +192,6 @@ public class ThreadShootingGameEx extends JFrame {
 		c.requestFocus();
 		
 		th.start();
-		bth.start();
 	}
 
 	public static void main(String[] args) {
