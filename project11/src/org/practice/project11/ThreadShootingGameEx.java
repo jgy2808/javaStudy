@@ -55,8 +55,9 @@ class TargetThread extends Thread {
 	}
 	
 	boolean isMeet() {
-		if (bp.getX() >= target.getX() && bp.getX() <= target.getX() + target.getWidth() &&
-				bp.getY() <= target.getY() + target.getHeight() + 6) {
+		if (target.getX() <= bp.getX() && bp.getX() <= target.getX() + target.getWidth() &&
+				bp.getY() <= target.getY() + target.getHeight()) {
+			System.out.println("Target Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + target.getX() + ", target y : " + target.getY());
 			return true;
 		}
 		return false;
@@ -65,7 +66,10 @@ class TargetThread extends Thread {
 	public void run() {
 		while (true) {
 			target.setLocation(target.getX() - 5, target.getY());
-			if (target.getX() == -50 || isMeet()) {
+			if (target.getX() == -50) {
+				target.Comeback();
+			}
+			if (this.isMeet()) {
 				target.Comeback();
 			}
 			try {
@@ -92,16 +96,18 @@ class BulletThread extends Thread {
 	}
 	
 	boolean isMeet() {
-		if ((bp.getX() >= target.getX() && bp.getX() <= target.getX() + target.getWidth() &&
+		if ((target.getX() <= bp.getX() && bp.getX() <= target.getX() + target.getWidth() &&
 				bp.getY() <= target.getY() + target.getHeight()) || bp.getY() < 0) {
+			System.out.println("Bullet Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + target.getX() + ", target y : " + target.getY());
 			return true;
 		}
 		return false;
 	}
 	
 	public void run() {
+		System.out.println(isShot);
 		while(true) {
-			System.out.println(isShot);
+			isShot = true;
 			if (isShot) {
 				bp.Shoot();
 				try {
@@ -111,7 +117,7 @@ class BulletThread extends Thread {
 					return;
 				}
 			}
-			if (isMeet()) {
+			if (this.isMeet()) {
 				bp.Comeback();
 				isShot = false;
 			}
@@ -136,6 +142,7 @@ public class ThreadShootingGameEx extends JFrame {
 		target.setLocation(350, 10);
 		
 		BulletPanel bp = new BulletPanel();
+		bp.setBackground(Color.BLUE);
 		bp.setSize(6, 6);
 		bp.setLocation(BULLET_PANEL_X, BULLET_PANEL_Y);
 		
@@ -145,7 +152,7 @@ public class ThreadShootingGameEx extends JFrame {
 		c.add(bp);
 		
 		ShooterPanel shooter = new ShooterPanel();
-		shooter.setBackground(Color.WHITE);
+		shooter.setBackground(Color.BLUE);
 		shooter.setSize(50, 50);
 		shooter.setLocation(400/2 - shooter.getWidth()/2, 400 - shooter.getHeight() - 50);
 		c.add(shooter);
@@ -155,7 +162,9 @@ public class ThreadShootingGameEx extends JFrame {
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					System.out.println("pressed Enter");
 					bth.setIsShotTrue();
+					System.out.println(bth.isShot);
 				}
 			}
 		});
