@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 class TargetPanel extends JPanel {
+	int x, y;
 	Image img;
 	TargetPanel(Image img){
 		this.img = img;
@@ -73,7 +74,7 @@ class TargetThread extends Thread {
 		this.bp = bp;
 	}
 	
-	boolean isMeet() {
+	synchronized boolean isMeet() {
 		if (target.getX() <= bp.getX() && bp.getX() <= target.getX() + target.getWidth() &&
 				bp.getY() <= target.getY() + target.getHeight()) {
 			System.out.println("Target Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + target.getX() + ", target y : " + target.getY());
@@ -111,15 +112,6 @@ class BulletThread extends Thread {
 		this.bp = bp;
 		this.target = target;
 	}
-	
-//	boolean isMeet() {
-//		if ((target.getX() <= bp.getX() && bp.getX() <= target.getX() + target.getWidth() &&
-//				bp.getY() <= target.getY() + target.getHeight()) || bp.getY() < 0) {
-//			System.out.println("Bullet Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + target.getX() + ", target y : " + target.getY());
-//			return true;
-//		}
-//		return false;
-//	}
 	
 	public void run() {
 		while(true) {
