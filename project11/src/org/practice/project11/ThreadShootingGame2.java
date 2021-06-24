@@ -15,16 +15,19 @@ class TargetPanel2 extends JPanel {
 	synchronized public boolean isCollision() {
 		if (getX() <= bp.getX() && bp.getX() <= getX() + getWidth() &&
 				bp.getY() <= getY() + getHeight()) {
-			System.out.println("Target Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + getX() + ", target y : " + getY());
 			return true;
 		}
 		return false;
 	}
 	
-	public void MoveTarget() {
+	 public void MoveTarget() {
 		int x = getX() - 5;
 		if (isCollision() || x < -50) {
 			x = 350;
+		}
+		if (isCollision() || bp.getY() < 0) {
+			bp.shot = false;
+			bp.setLocation(bp.getX(), 294);
 		}
 		setLocation(x, getY());
 	}
@@ -37,19 +40,11 @@ class TargetPanel2 extends JPanel {
 
 class BulletPanel2 extends JPanel {
 	boolean shot = false;
-	TargetPanel2 tp;
-	BulletPanel2(TargetPanel2 tp){
-		this.tp = tp;
-	}
 	
-	public void ShotBullet() {
-		int y = 50;
+	 public void ShotBullet() {
+		int y = getY();
 		if (shot) {
 			y = getY() - 5;
-		}
-		if (tp.isCollision() || y < 0) {
-			shot = false;
-			y = 294;
 		}
 		setLocation(getX(), y);
 	}
@@ -70,7 +65,7 @@ class TargetThread2 extends Thread {
 		while(true) {
 			tp.MoveTarget();
 			try {
-				sleep(500);
+				sleep(300);
 			} catch (InterruptedException e) { return; }
 		}
 	}
@@ -85,9 +80,16 @@ class BulletThread2 extends Thread {
 		while(true) {
 			bp.ShotBullet();
 			try {
-				sleep(500);
+				sleep(100);
 			} catch (InterruptedException e) { return; }
 		}
+	}
+}
+
+class ShooterPanel2 extends JPanel {
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.fillRect(0, 0, 50, 50);
 	}
 }
 
@@ -99,17 +101,43 @@ public class ThreadShootingGame2 extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(null);
 		
+		BulletPanel2 bp = new BulletPanel2();
+		bp.setSize(6, 6);
+		bp.setLocation(197, 294);
+		c.add(bp);
+		BulletThread2 bt = new BulletThread2(bp);
 		
+		ImageIcon icon = new ImageIcon("images/bg1.png");
+		Image img = icon.getImage();
+		TargetPanel2 tp = new TargetPanel2(img, bp);
+		tp.setSize(50, 50);
+		tp.setLocation(350, 10);
+		c.add(tp);
+		TargetThread2 tt = new TargetThread2(tp);
+		
+		ShooterPanel2 sp = new ShooterPanel2();
+		sp.setSize(50, 50);
+		sp.setLocation(175, 300);
+		c.add(sp);
+		
+		c.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					bp.shot = true;
+				}
+			}
+		});
 		
 		setSize(400, 400);
 		setLocation(200, 400);
 		setVisible(true);
+		c.requestFocus();
 		
+		bt.start();
+		tt.start();
 	}
 
 	public static void main(String[] args) {
 		new ThreadShootingGame2();
-
 	}
-
 }
