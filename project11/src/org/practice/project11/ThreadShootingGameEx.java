@@ -7,12 +7,23 @@ import java.awt.event.*;
 class TargetPanel extends JPanel {
 	int x, y;
 	Image img;
-	TargetPanel(Image img){
+	BulletPanel bp;
+	TargetPanel(Image img, BulletPanel bp){
 		this.img = img;
+		this.bp = bp;
 	}
 	
 	public void Comeback() {
 		setLocation(350, 10);
+	}
+	
+	synchronized boolean isMeet() {
+		if (getX() <= bp.getX() && bp.getX() <= getX() + getWidth() &&
+				bp.getY() <= getY() + getHeight()) {
+			System.out.println("Target Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + getX() + ", target y : " + getY());
+			return true;
+		}
+		return false;
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -74,15 +85,6 @@ class TargetThread extends Thread {
 		this.bp = bp;
 	}
 	
-	synchronized boolean isMeet() {
-		if (target.getX() <= bp.getX() && bp.getX() <= target.getX() + target.getWidth() &&
-				bp.getY() <= target.getY() + target.getHeight()) {
-			System.out.println("Target Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + target.getX() + ", target y : " + target.getY());
-			return true;
-		}
-		return false;
-	}
-	
 	public void run() {
 		while (true) {
 //			System.out.println("run");
@@ -94,10 +96,10 @@ class TargetThread extends Thread {
 				System.out.println("ObjMoveThread try");
 				return;
 			}
-			if (this.isMeet() || target.getX() == -50) {
+			if (target.isMeet() || target.getX() == -50) {
 				target.Comeback();
 			}
-			if (this.isMeet() || bp.getY() < 0) {
+			if (target.isMeet() || bp.getY() < 0) {
 				bp.isShot = false;
 				bp.Comeback();
 			}
@@ -133,16 +135,16 @@ public class ThreadShootingGameEx extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(null);
 		
-		ImageIcon icon = new ImageIcon("images/bg1.png");
-		Image img = icon.getImage();
-		TargetPanel target = new TargetPanel(img);
-		target.setSize(50, 50);
-		target.setLocation(350, 10);
-		
 		BulletPanel bp = new BulletPanel();
 		bp.setBackground(Color.BLUE);
 		bp.setSize(6, 6);
 		bp.setLocation(BULLET_PANEL_X, BULLET_PANEL_Y);
+
+		ImageIcon icon = new ImageIcon("images/bg1.png");
+		Image img = icon.getImage();
+		TargetPanel target = new TargetPanel(img, bp);
+		target.setSize(50, 50);
+		target.setLocation(350, 10);
 		
 		ShooterPanel shooter = new ShooterPanel();
 		shooter.setBackground(Color.BLUE);
