@@ -5,25 +5,13 @@ import java.awt.*;
 import java.awt.event.*;
 
 class TargetPanel extends JPanel {
-	int x, y;
 	Image img;
-	BulletPanel bp;
-	TargetPanel(Image img, BulletPanel bp){
+	TargetPanel(Image img){
 		this.img = img;
-		this.bp = bp;
 	}
 	
 	public void Comeback() {
 		setLocation(350, 10);
-	}
-	
-	synchronized boolean isMeet() {
-		if (getX() <= bp.getX() && bp.getX() <= getX() + getWidth() &&
-				bp.getY() <= getY() + getHeight()) {
-			System.out.println("Target Thread IsMeet bp x : " + bp.getX() + ", bp y : " + bp.getY() + ", target x : " + getX() + ", target y : " + getY());
-			return true;
-		}
-		return false;
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -34,28 +22,20 @@ class TargetPanel extends JPanel {
 
 class BulletPanel extends JPanel {
 	int x, y;
-	boolean isShot = false;
-	synchronized public void Shoot() {
-		if (!isShot) {
-			try {
-				wait();
-			} catch (InterruptedException e) { return; }
-		}
+	boolean isMoving = false;
+	public void Shoot() {
 		setLocation(this.getX(), this.getY() - 5);
-		if (this.getY() < 0) {
-			isShot = false;
-			notify();
-		}
 	}
 	
-	synchronized public void setisShot() {
-//		if (isShot) {
-//			try {
-//				wait();
-//			} catch (InterruptedException e) { return; }
-//		}
-		isShot = true;
-		notify();
+	public void Moving() {
+		isMoving = true;
+	}
+	public void NotMoving() {
+		isMoving = false;
+	}
+	
+	boolean getIsMoving() {
+		return isMoving;
 	}
 	
 	public void Comeback() {
@@ -85,23 +65,25 @@ class TargetThread extends Thread {
 		this.bp = bp;
 	}
 	
+	boolean isMeet() {
+		if (bp.getX() >= target.getX() && bp.getX() <= target.getX() + target.getWidth() &&
+				bp.getY() <= target.getY() + target.getHeight() + 6) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void run() {
 		while (true) {
-//			System.out.println("run");
 			target.setLocation(target.getX() - 5, target.getY());
-//			bp.Shoot();
+			if (target.getX() == -50 || isMeet()) {
+				target.Comeback();
+			}
 			try {
 				sleep(200);
 			} catch (InterruptedException e) {
 				System.out.println("ObjMoveThread try");
 				return;
-			}
-			if (target.isMeet() || target.getX() == -50) {
-				target.Comeback();
-			}
-			if (target.isMeet() || bp.getY() < 0) {
-				bp.isShot = false;
-				bp.Comeback();
 			}
 		}
 	}
@@ -115,12 +97,30 @@ class BulletThread extends Thread {
 		this.target = target;
 	}
 	
+	boolean isMeet() {
+		if ((bp.getX() >= target.getX() && bp.getX() <= target.getX() + target.getWidth() &&
+				bp.getY() <= target.getY() + target.getHeight()) || bp.getY() < 0) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void run() {
 		while(true) {
-			bp.Shoot();
-			try {
-				sleep(100);
-			} catch (InterruptedException e) { return; }
+			System.out.println(bp.getIsMoving()); // 이 출력문 지우면 발사 안되고 안지우면 발사 됩니다
+			if (bp.getIsMoving()) {
+				bp.Shoot();
+				try {
+					sleep(50);
+				} catch (InterruptedException e) {
+					System.out.println("Bullet Thread Error");
+					return;
+				}
+			}
+			if (isMeet()) {
+				bp.Comeback();
+				bp.NotMoving();
+			}
 		}
 	}
 }
@@ -135,40 +135,38 @@ public class ThreadShootingGameEx extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(null);
 		
-		BulletPanel bp = new BulletPanel();
-		bp.setBackground(Color.BLUE);
-		bp.setSize(6, 6);
-		bp.setLocation(BULLET_PANEL_X, BULLET_PANEL_Y);
-
 		ImageIcon icon = new ImageIcon("images/bg1.png");
 		Image img = icon.getImage();
-		TargetPanel target = new TargetPanel(img, bp);
+		TargetPanel target = new TargetPanel(img);
 		target.setSize(50, 50);
 		target.setLocation(350, 10);
 		
-		ShooterPanel shooter = new ShooterPanel();
-		shooter.setBackground(Color.BLUE);
-		shooter.setSize(50, 50);
-		shooter.setLocation(400/2 - shooter.getWidth()/2, 400 - shooter.getHeight() - 50);
+		BulletPanel bp = new BulletPanel();
+		bp.setSize(6, 6);
+		bp.setLocation(BULLET_PANEL_X, BULLET_PANEL_Y);
+		
+		TargetThread th = new TargetThread(target, bp);
 		
 		c.add(target);
 		c.add(bp);
-		c.add(shooter);
 		
+		ShooterPanel shooter = new ShooterPanel();
+		shooter.setBackground(Color.WHITE);
+		shooter.setSize(50, 50);
+		shooter.setLocation(400/2 - shooter.getWidth()/2, 400 - shooter.getHeight() - 50);
+		c.add(shooter);
 
-		TargetThread th = new TargetThread(target, bp);
 		BulletThread bth = new BulletThread(bp, target);
 		
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					System.out.println("pressed Enter");
-					bp.setisShot();
+					bp.Moving();
 				}
 			}
 		});
 		
-		setLocation(400, 200);
+		setLocation(200, 200);
 		setSize(400, 400);
 		setVisible(true);
 		c.requestFocus();
