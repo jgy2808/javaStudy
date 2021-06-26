@@ -7,7 +7,9 @@ import java.awt.event.*;
 class CountLabel extends JLabel {
 	int count = 1;
 	boolean cntFlag = false;
-	CountLabel(){
+	
+	int getCount() {
+		return count;
 	}
 	
 	void setFlag() {
@@ -24,7 +26,6 @@ class CountLabel extends JLabel {
 		count = 1;
 		cntFlag = false;
 	}
-	
 }
 
 class GameThread extends Thread {
@@ -36,7 +37,7 @@ class GameThread extends Thread {
 		while(true) {
 			cl.start();
 			try {
-				sleep(500);
+				sleep(1000);
 			} catch (InterruptedException e) { return; }
 		}
 	}
@@ -57,6 +58,7 @@ public class Thread369Game extends JFrame {
 		cl.setFont(new Font("Gothic", Font.ITALIC, 20));
 		cl.setOpaque(true);
 		cl.setHorizontalAlignment(JLabel.CENTER);
+		cl.setText(Integer.toString(cl.getCount()));
 		c.add(cl);
 		
 		JButton btn = new JButton("Start");
@@ -70,22 +72,36 @@ public class Thread369Game extends JFrame {
 		});
 		c.add(btn);
 		
+		GameThread gt = new GameThread(cl);
+		
 		c.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 1) {
-					
+				System.out.println(e.getClickCount());
+				if (cl.cntFlag) {
+					if (Distinction(cl.getCount()) != e.getClickCount()) {
+						cl.init();
+						btn.setEnabled(true);
+					}
 				}
 			}
 		});
 		
 		setSize(300, 300);
 		setVisible(true);
-		setLocation(300, 300);		
+		setLocation(300, 300);
+		
+		gt.start();
 	}
 	
 	public static void main(String[] args) {
 		new Thread369Game();
 
+	}
+	
+	int Distinction(int value) {
+		int one = ((value%10) > 0 && (value%10)%3 == 0) ? 1 : 0;
+		int ten = (value > 9 && (value/10)%3 == 0) ? 1 : 0;
+		return one+ten;
 	}
 
 }
