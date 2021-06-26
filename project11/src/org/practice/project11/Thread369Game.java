@@ -6,9 +6,40 @@ import java.awt.event.*;
 
 class CountLabel extends JLabel {
 	int count = 1;
+	boolean cntFlag = false;
 	CountLabel(){
 	}
 	
+	void setFlag() {
+		cntFlag = true;
+	}
+	
+	void start() {
+		if (cntFlag) {
+			setText(Integer.toString(count++));
+		}
+	}
+	
+	void init() {
+		count = 1;
+		cntFlag = false;
+	}
+	
+}
+
+class GameThread extends Thread {
+	CountLabel cl;
+	GameThread(CountLabel cl){
+		this.cl = cl;
+	}
+	public void run() {
+		while(true) {
+			cl.start();
+			try {
+				sleep(500);
+			} catch (InterruptedException e) { return; }
+		}
+	}
 }
 
 public class Thread369Game extends JFrame { 
@@ -31,7 +62,21 @@ public class Thread369Game extends JFrame {
 		JButton btn = new JButton("Start");
 		btn.setSize(80, 20);
 		btn.setLocation(110, 200);
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cl.setFlag();
+				btn.setEnabled(false);
+			}
+		});
 		c.add(btn);
+		
+		c.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 1) {
+					
+				}
+			}
+		});
 		
 		setSize(300, 300);
 		setVisible(true);
