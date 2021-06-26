@@ -18,7 +18,8 @@ class CountLabel extends JLabel {
 	
 	void start() {
 		if (cntFlag) {
-			setText(Integer.toString(count++));
+			setText(Integer.toString(count));
+			count += 1;
 		}
 	}
 	
@@ -33,11 +34,12 @@ class GameThread extends Thread {
 	GameThread(CountLabel cl){
 		this.cl = cl;
 	}
+	
 	public void run() {
 		while(true) {
 			cl.start();
 			try {
-				sleep(1000);
+				sleep(500);
 			} catch (InterruptedException e) { return; }
 		}
 	}
@@ -78,9 +80,10 @@ public class Thread369Game extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				System.out.println(e.getClickCount());
 				if (cl.cntFlag) {
-					if (Distinction(cl.getCount()) != e.getClickCount()) {
+					if (Distinction(cl.getCount() - 1) != e.getClickCount()) {
 						cl.init();
 						btn.setEnabled(true);
+						// 실패 시 Fail^ 또는 Fail^^ Text 출력하기
 					}
 				}
 			}
