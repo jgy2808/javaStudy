@@ -6,26 +6,37 @@ import java.awt.event.*;
 
 class CountLabel extends JLabel {
 	int count = 1;
-	boolean cntFlag = false;
+	boolean flagOfCnt = false;
+	boolean flagOfClick = false;
 	
 	int getCount() {
 		return count;
 	}
 	
 	void setFlag() {
-		cntFlag = true;
+		flagOfCnt = true;
 	}
 	
 	void start() {
-		if (cntFlag) {
+		if (flagOfCnt) {
 			setText(Integer.toString(count));
 			count += 1;
 		}
 	}
 	
+	void isClicked() {
+		if (flagOfClick) {
+			flagOfClick = false;
+		} else {
+			init();
+			setText("Fail");
+			System.exit(0);
+		}
+	}
+
 	void init() {
 		count = 1;
-		cntFlag = false;
+		flagOfCnt = false;
 	}
 }
 
@@ -41,6 +52,7 @@ class GameThread extends Thread {
 			try {
 				sleep(500);
 			} catch (InterruptedException e) { return; }
+			cl.isClicked();
 		}
 	}
 }
@@ -79,7 +91,7 @@ public class Thread369Game extends JFrame {
 		c.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				System.out.println(e.getClickCount());
-				if (cl.cntFlag) {
+				if (cl.flagOfCnt) {
 					if (Distinction(cl.getCount() - 1) != e.getClickCount()) {
 						cl.init();
 						btn.setEnabled(true);
