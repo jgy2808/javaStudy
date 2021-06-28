@@ -77,13 +77,14 @@ public class Thread369Game extends JFrame {
 		GameThread gt = new GameThread(cl);
 		
 		c.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+			public void mousePressed(MouseEvent e) {
 				System.out.println(e.getClickCount());
 				if (cl.cntFlag) {
 					if (Distinction(cl.getCount() - 1) != e.getClickCount()) {
 						cl.init();
 						btn.setEnabled(true);
-						// 실패 시 Fail^ 또는 Fail^^ Text 출력하기
+						cl.setText("Fail" + ((Distinction(cl.getCount() - 1) > 1) ? "^^" : "^"));
+						
 					}
 				}
 			}
