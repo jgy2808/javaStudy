@@ -5,9 +5,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 class CountLabel extends JLabel {
-	int count = 1;
+	int count = 0;
 	boolean flagOfCnt = false;
-	boolean flagOfClick = false;
+	int clickCnt = 0;
 	
 	int getCount() {
 		return count;
@@ -19,41 +19,63 @@ class CountLabel extends JLabel {
 	
 	void start() {
 		if (flagOfCnt) {
-			setText(Integer.toString(count));
-			count += 1;
+			setText(Integer.toString(++count));
+			if (Distinction(count - 1) != clickCnt)
+				init();
+			clickCnt = 0;
 		}
 	}
 	
-	void isClicked() {
-		if (flagOfClick) {
-			flagOfClick = false;
-		} else {
-			init();
-			setText("Fail");
-			System.exit(0);
-		}
+	void setclickCnt(int clickCnt) {
+		this.clickCnt = clickCnt;
 	}
+	
+	int Distinction(int value) {
+		int one = ((value%10) > 0 && (value%10)%3 == 0) ? 1 : 0;
+		int ten = (value > 9 && (value/10)%3 == 0) ? 1 : 0;
+		return one+ten;
+	}
+	
+//	void isClicked() {
+//		if (count % 3 == 0 && flagOfClick) {
+//			flagOfClick = false;
+//		} else {
+//			init();
+//			setText("Fail");
+//			System.exit(0);
+//		}
+//	}
 
 	void init() {
-		count = 1;
+		count = 0;
 		flagOfCnt = false;
 	}
 }
 
 class GameThread extends Thread {
 	CountLabel cl;
-	GameThread(CountLabel cl){
+	JButton btn;
+	GameThread(CountLabel cl, JButton btn){
 		this.cl = cl;
+		this.btn = btn;
 	}
 	
 	public void run() {
 		while(true) {
+			setbtnEnabled();
 			cl.start();
 			try {
 				sleep(500);
 			} catch (InterruptedException e) { return; }
-			cl.isClicked();
+//			cl.isClicked();
 		}
+	}
+	
+	void setbtnEnabled() {
+		if (cl.flagOfCnt)
+			btn.setEnabled(false);
+		else
+			btn.setEnabled(true);
 	}
 }
 
@@ -81,23 +103,24 @@ public class Thread369Game extends JFrame {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cl.setFlag();
-				btn.setEnabled(false);
+//				btn.setEnabled(false);
 			}
 		});
 		c.add(btn);
 		
-		GameThread gt = new GameThread(cl);
+		GameThread gt = new GameThread(cl, btn);
 		
 		c.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				System.out.println(e.getClickCount());
 				if (cl.flagOfCnt) {
-					if (Distinction(cl.getCount() - 1) != e.getClickCount()) {
-						cl.init();
-						btn.setEnabled(true);
-						cl.setText("Fail" + ((Distinction(cl.getCount() - 1) > 1) ? "^^" : "^"));
-						
-					}
+					cl.setclickCnt(e.getClickCount());
+//					if (Distinction(cl.getCount() - 1) != e.getClickCount()) {
+//						cl.init();
+//						btn.setEnabled(true);
+//						cl.setText("Fail" + ((Distinction(cl.getCount() - 1) > 1) ? "^^" : "^"));
+//						
+//					}
 				}
 			}
 		});
@@ -114,10 +137,6 @@ public class Thread369Game extends JFrame {
 
 	}
 	
-	int Distinction(int value) {
-		int one = ((value%10) > 0 && (value%10)%3 == 0) ? 1 : 0;
-		int ten = (value > 9 && (value/10)%3 == 0) ? 1 : 0;
-		return one+ten;
-	}
+
 
 }
