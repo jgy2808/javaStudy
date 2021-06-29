@@ -38,16 +38,6 @@ class CountLabel extends JLabel {
 		int ten = (value > 9 && (value/10)%3 == 0) ? 1 : 0;
 		return one+ten;
 	}
-	
-//	void isClicked() {
-//		if (count % 3 == 0 && flagOfClick) {
-//			flagOfClick = false;
-//		} else {
-//			init();
-//			setText("Fail");
-//			System.exit(0);
-//		}
-//	}
 
 	void init() {
 		count = 0;
@@ -72,7 +62,6 @@ class GameThread extends Thread {
 			} catch (InterruptedException e) { return; }
 			cl.isFinished();
 			if (cl.flagOfCnt) cl.count += 1;
-//			cl.isClicked();
 		}
 	}
 	
@@ -108,7 +97,6 @@ public class Thread369Game extends JFrame {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cl.setFlag();
-//				btn.setEnabled(false);
 			}
 		});
 		c.add(btn);
@@ -120,12 +108,6 @@ public class Thread369Game extends JFrame {
 				System.out.println(e.getClickCount());
 				if (cl.flagOfCnt) {
 					cl.setclickCnt(e.getClickCount());
-//					if (Distinction(cl.getCount() - 1) != e.getClickCount()) {
-//						cl.init();
-//						btn.setEnabled(true);
-//						cl.setText("Fail" + ((Distinction(cl.getCount() - 1) > 1) ? "^^" : "^"));
-//						
-//					}
 				}
 			}
 		});
@@ -141,7 +123,4 @@ public class Thread369Game extends JFrame {
 		new Thread369Game();
 
 	}
-	
-
-
 }
