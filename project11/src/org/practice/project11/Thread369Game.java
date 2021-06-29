@@ -19,11 +19,14 @@ class CountLabel extends JLabel {
 	
 	void start() {
 		if (flagOfCnt) {
-			setText(Integer.toString(++count));
-			if (Distinction(count - 1) != clickCnt)
-				init();
-			clickCnt = 0;
+			setText(Integer.toString(count));
 		}
+	}
+	
+	void isFinished() {
+		if (Distinction(count) != clickCnt)
+			init();
+		clickCnt = 0;
 	}
 	
 	void setclickCnt(int clickCnt) {
@@ -67,6 +70,8 @@ class GameThread extends Thread {
 			try {
 				sleep(500);
 			} catch (InterruptedException e) { return; }
+			cl.isFinished();
+			if (cl.flagOfCnt) cl.count += 1;
 //			cl.isClicked();
 		}
 	}
