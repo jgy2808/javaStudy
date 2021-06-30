@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 class CountLabel extends JLabel {
-	int count = 0;
+	int count = 30;
 	boolean flagOfCnt = false;
 	int clickCnt = 0;
 	
@@ -58,7 +58,7 @@ class GameThread extends Thread {
 			setbtnEnabled();
 			cl.start();
 			try {
-				sleep(500);
+				sleep(700);
 			} catch (InterruptedException e) { return; }
 			cl.isFinished();
 			if (cl.flagOfCnt) cl.count += 1;
@@ -107,7 +107,12 @@ public class Thread369Game extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				System.out.println(e.getClickCount());
 				if (cl.flagOfCnt) {
-					cl.setclickCnt(e.getClickCount());
+					if(e.getClickCount() == 2)
+						cl.setclickCnt(2);
+					else if (e.getClickCount() == 1)
+						cl.setclickCnt(1);
+					else
+						cl.setclickCnt(0);
 				}
 			}
 		});
