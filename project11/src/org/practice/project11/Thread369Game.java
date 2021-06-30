@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 class CountLabel extends JLabel {
-	int count = 30;
+	int count = 0;
 	boolean flagOfCnt = false;
 	int clickCnt = 0;
 	
@@ -40,6 +40,7 @@ class CountLabel extends JLabel {
 	}
 
 	void init() {
+		setText("Fail" + ((Distinction(count) > 1)? "^^" : "^"));
 		count = 0;
 		flagOfCnt = false;
 	}
