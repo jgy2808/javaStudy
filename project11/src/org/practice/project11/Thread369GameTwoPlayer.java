@@ -17,7 +17,7 @@ class GameLabelPlayer2 extends JLabel {
 }
 
 class GameThreadTwoPlayer extends Thread {
-	boolean flagOfStart = false;
+	boolean flagOfStart;
 	int count = 1;
 	char keyCode;
 	
@@ -33,7 +33,6 @@ class GameThreadTwoPlayer extends Thread {
 	
 	public void run() {
 		while(true) {
-			System.out.println(flagOfStart);
 			if (flagOfStart) {
 				btn.setEnabled(false);
 				if (setTurn())
@@ -54,7 +53,7 @@ class GameThreadTwoPlayer extends Thread {
 	
 	void init() {
 		flagOfStart = false;
-		count = 1;
+		count = 0;
 	}
 	
 	boolean setTurn() {
@@ -72,11 +71,13 @@ class GameThreadTwoPlayer extends Thread {
 		if (setTurn()) {
 			if ( (Distinction() == 1 && (keyCode != 'A' || keyCode != 'a') ) ||
 					(Distinction() == 2 && (keyCode != 'S' || keyCode != 's')) ) {
+				System.out.println("1p fail");
 				init();
 			}
 		} else {
 			if ( (Distinction() == 1 && (keyCode != 'K' || keyCode != 'k') ) ||
 					(Distinction() == 2 && (keyCode != 'L' || keyCode != 'l')) ) {
+				System.out.println("2p fail");
 				init();
 			}
 		}
@@ -137,6 +138,8 @@ public class Thread369GameTwoPlayer extends JFrame {
 		
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				glp1.setText("");
+				glp2.setText("");
 				gth.flagOfStart = true;
 			}
 		});
