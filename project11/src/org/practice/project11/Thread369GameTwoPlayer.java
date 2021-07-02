@@ -19,6 +19,8 @@ class GameLabelPlayer2 extends JLabel {
 class GameThreadTwoPlayer extends Thread {
 	boolean flagOfStart = false;
 	int count = 1;
+	char keyCode;
+	
 	GameLabelPlayer1 glp1;
 	GameLabelPlayer2 glp2;
 	JButton btn;
@@ -31,21 +33,59 @@ class GameThreadTwoPlayer extends Thread {
 	
 	public void run() {
 		while(true) {
+			System.out.println(flagOfStart);
 			if (flagOfStart) {
 				btn.setEnabled(false);
-				if (count % 2 == 0)
+				if (setTurn())
 					glp1.start(count);
 				else 
 					glp2.start(count);
 				try {
 					sleep(700);
 				} catch (InterruptedException e) { return; }
+				isFinished();
 				count += 1;
 			}
 			else {
 				btn.setEnabled(true);
 			}
 		}
+	}
+	
+	void init() {
+		flagOfStart = false;
+		count = 1;
+	}
+	
+	boolean setTurn() {
+		if (count % 2 == 0) 
+			return true; // p1
+		else
+			return false; // p2
+	}
+	
+	void setKeyCode(char keyCode) {
+		this.keyCode = keyCode;
+	}
+	
+	void isFinished() {
+		if (setTurn()) {
+			if ( (Distinction() == 1 && (keyCode != 'A' || keyCode != 'a') ) ||
+					(Distinction() == 2 && (keyCode != 'S' || keyCode != 's')) ) {
+				init();
+			}
+		} else {
+			if ( (Distinction() == 1 && (keyCode != 'K' || keyCode != 'k') ) ||
+					(Distinction() == 2 && (keyCode != 'L' || keyCode != 'l')) ) {
+				init();
+			}
+		}
+	}
+	
+	int Distinction() {
+		int one = ((count%10) > 0 && (count%10)%3 == 0) ? 1 : 0;
+		int ten = (count > 9 && (count/10)%3 == 0) ? 1 : 0;
+		return one+ten;
 	}
 }
 
@@ -104,7 +144,8 @@ public class Thread369GameTwoPlayer extends JFrame {
 		
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				
+				System.out.println(e.getKeyChar());
+				gth.setKeyCode(e.getKeyChar());
 			}
 		});
 		
@@ -113,6 +154,7 @@ public class Thread369GameTwoPlayer extends JFrame {
 		setLocation(400, 200);
 		c.requestFocus();
 		
+		gth.start();
 		
 	}
 	public static void main(String[] args) {
