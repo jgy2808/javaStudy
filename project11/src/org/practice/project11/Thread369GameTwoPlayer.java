@@ -5,19 +5,24 @@ import java.awt.*;
 import java.awt.event.*;
 
 class GameLabelPlayer1 extends JLabel {
+	boolean flagOf1p = false;
 	void start(int count) {
-		setText(Integer.toString(count));
+		if (flagOf1p)
+			setText(Integer.toString(count));
 	}
 }
 
 class GameLabelPlayer2 extends JLabel {
+	boolean flagOf2p = false;
 	void start(int count) {
-		setText(Integer.toString(count));
+		if (flagOf2p)
+			setText(Integer.toString(count));
 	}
 }
 
 class GameThreadTwoPlayer extends Thread {
 	boolean flagOfStart;
+	boolean flagOfBtn = false;
 	int count = 1;
 	char keyCode;
 	
@@ -33,34 +38,52 @@ class GameThreadTwoPlayer extends Thread {
 	
 	public void run() {
 		while(true) {
-			if (flagOfStart) {
-				btn.setEnabled(false);
-				if (setTurn())
-					glp1.start(count);
-				else 
-					glp2.start(count);
-				try {
-					sleep(700);
-				} catch (InterruptedException e) { return; }
-				isFinished();
-				count += 1;
-			}
-			else {
-				btn.setEnabled(true);
-			}
+			setBtnEnabled();
+			if (count % 2 == 0)
+				glp1.start(count);
+			else
+				glp2.start(count);
+			try {
+				sleep(700);
+			} catch (InterruptedException e) { return; }
+			isFinished();
+			if (flagOfStart) count += 1;
+//			if (flagOfStart) {
+//				btn.setEnabled(false);
+//				if (setTurn())
+//					glp1.start(count);
+//				else 
+//					glp2.start(count);
+//				try {
+//					sleep(700);
+//				} catch (InterruptedException e) { return; }
+//				isFinished();
+//				count += 1;
+//			}
+//			else {
+//				btn.setEnabled(true);
+//			}
 		}
 	}
 	
 	void init() {
 		flagOfStart = false;
+		flagOfBtn = false;
 		count = 0;
+		glp1.flagOf1p = false;
+		glp2.flagOf2p = false;
 	}
 	
-	boolean setTurn() {
-		if (count % 2 == 0) 
-			return true; // p1
+	void setBtnEnabled() {
+		if (flagOfBtn)
+			btn.setEnabled(false);
 		else
-			return false; // p2
+			btn.setEnabled(true);
+	}
+	
+	void setFlagOfPlayer() {
+		glp1.flagOf1p = true;
+		glp2.flagOf2p = true;
 	}
 	
 	void setKeyCode(char keyCode) {
@@ -68,14 +91,14 @@ class GameThreadTwoPlayer extends Thread {
 	}
 	
 	void isFinished() {
-		if (setTurn()) {
+		if (count % 2 == 0) {
 			if ( (Distinction() == 1 && (keyCode != 'A' || keyCode != 'a') ) ||
 					(Distinction() == 2 && (keyCode != 'S' || keyCode != 's')) ) {
 				System.out.println("1p fail");
 				init();
 			}
 		} else {
-			if ( (Distinction() == 1 && (keyCode != 'K' || keyCode != 'k') ) ||
+			if ( (Distinction() == 1 && (keyCode != 'k' || keyCode != 'K') ) ||
 					(Distinction() == 2 && (keyCode != 'L' || keyCode != 'l')) ) {
 				System.out.println("2p fail");
 				init();
@@ -140,7 +163,9 @@ public class Thread369GameTwoPlayer extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				glp1.setText("");
 				glp2.setText("");
+				gth.setFlagOfPlayer();
 				gth.flagOfStart = true;
+				gth.flagOfBtn = true;
 			}
 		});
 		c.add(btn);
