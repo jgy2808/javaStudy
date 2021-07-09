@@ -4,24 +4,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class GameLabelPlayer1 extends JLabel {
-}
-
-class GameLabelPlayer2 extends JLabel {
-}
-
 class LabelHandler {
-	int count = 1;
-	char keyCode;
+	int count = 0;
+	char keyCode = 0;
+	boolean flag = false;
+	boolean flagOfCnt = false;
 	
-	GameLabelPlayer1 p1;
-	GameLabelPlayer2 p2;
-	LabelHandler(GameLabelPlayer1 p1, GameLabelPlayer2 p2) {
+	JLabel p1;
+	JLabel p2;
+	
+	LabelHandler(JLabel p1, JLabel p2) {
 		this.p1 = p1;
 		this.p2 = p2;
 	}
 	
-	boolean flag = false;
 	void play() {
 		if (flag) {
 			if (count % 2 == 0)
@@ -32,28 +28,23 @@ class LabelHandler {
 	}
 	
 	boolean isFinished() {
-		if (Distinction() > 0) {
+		if (Distinction() == 0) {
+			if (keyCode != 0) { return true; }
+		} else if (Distinction() == 1) {
 			if (count % 2 == 0) {
-				if (Distinction() == 1 && keyCode != 'a') {
-					p1.setText("Fail^");
-				} else if (Distinction() == 2 && keyCode != 's') {
-					p1.setText("Fail^^");
-				}
-				System.out.println("1p fail");
-				return true;
+				if (keyCode != 'a') return true;
 			} else {
-				if (Distinction() == 1 && keyCode != 'k') {
-					p2.setText("Fail^");
-				} else if (Distinction() == 2 && keyCode != 'l') {
-					p2.setText("Fail^^");
-				}
-				System.out.println("2p fail");
-				return true;
+				if (keyCode != 'k') return true;
+			}
+		} else if (Distinction() == 2) {
+			if (count % 2 == 0) {
+				if (keyCode != 's') return true;
+			} else {
+				if (keyCode != 'l') return true;
 			}
 		}
 		return false;
 	}
-	
 
 	int Distinction() {
 		int one = ((count%10) > 0 && (count%10)%3 == 0) ? 1 : 0;
@@ -68,65 +59,39 @@ class LabelHandler {
 }
 
 class GameThreadTwoPlayer extends Thread {
-	boolean flagOfCnt = false;
 	LabelHandler lh;
 	JButton btn;
 	
-	public GameThreadTwoPlayer(GameLabelPlayer1 p1, GameLabelPlayer2 p2, JButton btn) {
-		lh = new LabelHandler(p1, p2);
+	public GameThreadTwoPlayer(LabelHandler lh, JButton btn) {
+		this.lh = lh;
 		this.btn = btn;
-	}
-	
-	LabelHandler getlabelhandler() {
-		return lh;
 	}
 	
 	public void run() {
 		while(true) {
-//			setBtnEnabled();
-//			if (count % 2 == 0)
-//				glp1.start(count);
-//			else
-//				glp2.start(count);
-//			try {
-//				sleep(700);
-//			} catch (InterruptedException e) { return; }
-//			isFinished();
-//			if (flagOfStart) count += 1;
-//			---------------------------------------------------------------
-//			if (flagOfBtn) {
-//				if (count % 2 == 0)
-//					glp1.setText(Integer.toString(count));
-//				else 
-//					glp2.setText(Integer.toString(count));
-//				try {
-//					sleep(700);
-//				} catch (InterruptedException e) { e.printStackTrace(); return; }
-//				isFinished();
-//				count += 1;
-//			}
 			lh.play();
 			try {
 				sleep(700);
 			} catch (InterruptedException e) { e.printStackTrace(); return; }
+
 			if (lh.isFinished()) {
+				if (lh.count % 2 == 0) lh.p1.setText("Fail" + ((lh.Distinction() > 1) ? "^^":"^" ));
+				else lh.p2.setText("Fail" + ((lh.Distinction() > 1) ? "^^":"^" ));
 				init();
 			}
-			if (flagOfCnt) lh.count += 1;
+			if (lh.flagOfCnt) {
+				lh.count += 1;
+			}
+			lh.keyCode = 0;
 		}
-	}
-	
-	void sethandlerflag() {
-		lh.flag = true;
 	}
 	
 	void init() {
 		lh.flag = false;
-		flagOfCnt = false;
-		lh.count = 1;
+		lh.flagOfCnt = false;
+		lh.count = 0;
 		btn.setEnabled(true);
 	}
-	
 }
 
 public class Thread369GameTwoPlayer extends JFrame {
@@ -151,7 +116,7 @@ public class Thread369GameTwoPlayer extends JFrame {
 		l2.setHorizontalAlignment(JLabel.CENTER);
 		c.add(l2);
 		
-		GameLabelPlayer1 p1 = new GameLabelPlayer1();
+		JLabel p1 = new JLabel();
 		p1.setSize(80, 40);
 		p1.setLocation(60, 100);
 		p1.setBackground(Color.YELLOW);
@@ -160,7 +125,7 @@ public class Thread369GameTwoPlayer extends JFrame {
 		p1.setHorizontalAlignment(JLabel.CENTER);
 		c.add(p1);
 		
-		GameLabelPlayer2 p2 = new GameLabelPlayer2();
+		JLabel p2 = new JLabel();
 		p2.setSize(80, 40);
 		p2.setLocation(160, 100);
 		p2.setBackground(Color.YELLOW);
@@ -169,40 +134,40 @@ public class Thread369GameTwoPlayer extends JFrame {
 		p2.setHorizontalAlignment(JLabel.CENTER);
 		c.add(p2);
 		
+		LabelHandler lh = new LabelHandler(p1, p2);
+		
 		JButton btn = new JButton("start");
 		btn.setSize(80, 20);
 		btn.setLocation(110, 200);
-		
-		GameThreadTwoPlayer gth = new GameThreadTwoPlayer(p1, p2, btn);
-		
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				btn.setEnabled(false);
 				p1.setText("");
 				p2.setText("");
-				gth.flagOfCnt = true;
-				gth.sethandlerflag();
+				lh.flagOfCnt = true;
+				lh.flag = true;
 			}
 		});
 		c.add(btn);
 		
+		GameThreadTwoPlayer gth = new GameThreadTwoPlayer(lh, btn);
+		
 		c.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				System.out.println(e.getKeyChar());
-				gth.getlabelhandler().setKeyCode(e.getKeyChar());
+				lh.setKeyCode(e.getKeyChar());
 			}
 		});
 		
 		setSize(300, 300);
 		setVisible(true);
 		setLocation(400, 200);
-		c.requestFocus();
+		c.setFocusable(true);
 		
 		gth.start();
-		
 	}
+	
 	public static void main(String[] args) {
 		new Thread369GameTwoPlayer();
 	}
-
 }
